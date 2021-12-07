@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// Quick update before vacation
+
 const History = (props) => {
 	if (props.allClicks.length === 0) {
 		return <div>the app is used by pressing the buttons</div>;
@@ -17,7 +17,7 @@ const App = () => {
 	const [left, setLeft] = useState(0);
 	const [right, setRight] = useState(0);
 	const [allClicks, setAll] = useState([]);
-	const [value, setValue] = useState(10);
+	const [value, setValue] = useState(0);
 
 	const handleLeftClick = () => {
 		setAll(allClicks.concat('L'));
