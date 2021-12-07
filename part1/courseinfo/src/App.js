@@ -1,52 +1,115 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const History = (props) => {
-	if (props.allClicks.length === 0) {
-		return <div>the app is used by pressing the buttons</div>;
-	}
-	return <div>button press history: {props.allClicks.join(' ')}</div>;
-};
-
-const Display = (props) => <div>{props.value}</div>;
-
-const Button = (props) => (
-	<button onClick={props.handleClick}>{props.text}</button>
-);
-
-const App = () => {
-	const [left, setLeft] = useState(0);
-	const [right, setRight] = useState(0);
-	const [allClicks, setAll] = useState([]);
-	const [value, setValue] = useState(0);
-
-	const handleLeftClick = () => {
-		setAll(allClicks.concat('L'));
-		setLeft(left + 1);
-	};
-
-	const handleRightClick = () => {
-		setAll(allClicks.concat('R'));
-		setRight(right + 1);
-	};
-
-	const setToValue = (newValue) => {
-		setValue(newValue);
-	};
-
+const Header = () => {
 	return (
-		<div>
-			{left}
-			<Button handleClick={handleLeftClick} text='left' />
-			<Button handleClick={handleRightClick} text='right' />
-			{right}
-			<History allClicks={allClicks} />
-			<Display value={value} />
-			<Button handleClick={() => setValue(1000)} text='thousand' />
-			<Button handleClick={() => setValue(0)} text='reset' />
-			<Button handleClick={() => setValue(value + 1)} text='increment +1' />
+		<div className='header'>
+			<h1>Half Stack application development</h1>
 		</div>
 	);
 };
+
+const Content = ({ parts }) => {
+	return (
+		<div>
+			{parts.map((part) => (
+				<Part key={part.id} part={part} />
+			))}
+		</div>
+	);
+};
+
+const Part = ({ part }) => {
+	return (
+		<p>
+			{part.name} {part.exercises}
+		</p>
+	);
+};
+
+const Course = () => {
+	const course = {
+		id: 1,
+		name: 'Half Stack application development',
+		parts: [
+			{
+				name: 'Fundamentals of React',
+				exercises: 10,
+				id: 1,
+			},
+			{
+				name: 'Using props to pass data',
+				exercises: 7,
+				id: 2,
+			},
+			{
+				name: 'State of a component',
+				exercises: 14,
+				id: 3,
+			},
+		],
+	};
+	return (
+		<div>
+			<Header course={course} />
+			<Content parts={course.parts} />
+			{/* <Total parts={course.parts} /> */}
+		</div>
+	);
+};
+
+const App = ({ course }) => {
+	return <Course course={course} />;
+};
+
+export default App;
+
+// const History = (props) => {
+// 	if (props.allClicks.length === 0) {
+// 		return <div>the app is used by pressing the buttons</div>;
+// 	}
+// 	return <div>button press history: {props.allClicks.join(' ')}</div>;
+// };
+
+// const Display = (props) => <div>{props.value}</div>;
+
+// const Button = (props) => (
+// 	<button onClick={props.handleClick}>{props.text}</button>
+// );
+
+// const App = () => {
+// 	const [left, setLeft] = useState(0);
+// 	const [right, setRight] = useState(0);
+// 	const [allClicks, setAll] = useState([]);
+// 	const [value, setValue] = useState(0);
+
+// 	const handleLeftClick = () => {
+// 		setAll(allClicks.concat('L'));
+// 		setLeft(left + 1);
+// 	};
+
+// 	const handleRightClick = () => {
+// 		setAll(allClicks.concat('R'));
+// 		setRight(right + 1);
+// 	};
+
+// 	const setToValue = (newValue) => {
+// 		setValue(newValue);
+// 	};
+
+// 	return (
+// 		<div>
+// 			{left}
+// 			<Button handleClick={handleLeftClick} text='left' />
+// 			<Button handleClick={handleRightClick} text='right' />
+// 			{right}
+// 			<History allClicks={allClicks} />
+// 			<Display value={value} />
+// 			<Button handleClick={() => setValue(1000)} text='thousand' />
+// 			<Button handleClick={() => setValue(0)} text='reset' />
+// 			<Button handleClick={() => setValue(value + 1)} text='increment +1' />
+// 		</div>
+// 	);
+// };
 
 // const App = () => {
 // 	const [counter, setCounter] = useState(0);
@@ -168,5 +231,3 @@ const App = () => {
 // 		</div>
 // 	);
 // };
-
-export default App;
