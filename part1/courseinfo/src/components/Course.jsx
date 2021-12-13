@@ -1,11 +1,18 @@
 import React from 'react';
 
 // need to fix - wont render
-const Header = ({ courses }) => {
-	return <h1>{courses}</h1>;
+
+const Header = () => {
+	const name = 'Web development curriculum';
+	return (
+		<div>
+			<h1>{name}</h1>
+		</div>
+	);
 };
 
 const Part = ({ part }) => {
+	console.log(part);
 	return (
 		<p>
 			{part.name} {part.exercises}
@@ -25,6 +32,7 @@ const Content = ({ parts }) => {
 
 const Total = ({ parts }) => {
 	const total = parts.reduce((acc, part) => acc + part.exercises, 0);
+
 	return (
 		<p>
 			<b>Total of {total} exercises</b>
@@ -79,7 +87,7 @@ const Course = () => {
 	];
 	return (
 		<div>
-			<Header course={courses[0].name} />
+			<Header parts={courses[0].name} />
 			<Content parts={courses[0].parts} />
 			<Total parts={courses[0].parts} />
 		</div>
