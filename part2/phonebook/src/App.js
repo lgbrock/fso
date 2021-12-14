@@ -9,13 +9,11 @@ const App = () => {
 		{ name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
 	]);
 	// controls the form input element
-	const [newName, setNewName] = useState('input name...');
-	// name already exists in the phonebook
-	const [newNameExists, setNewNameExists] = useState(false);
+	const [newName, setNewName] = useState(['']);
 	// set the new phone number
-	const [newNumber, setNewNumber] = useState('input phone number...');
+	const [newNumber, setNewNumber] = useState(['']);
 	// filter the phonebook
-	const [showAll, setShowAll] = useState(true);
+	const [filter, setFilter] = useState('');
 
 	const addName = (event) => {
 		event.preventDefault();
@@ -23,7 +21,7 @@ const App = () => {
 		const nameObject = {
 			name: newName,
 			number: newNumber,
-			filter: newName.toLowerCase(),
+			filter: filter,
 			id: persons.length + 1,
 		};
 		// check if name already exists
@@ -34,6 +32,7 @@ const App = () => {
 			setPersons(persons.concat(nameObject));
 			setNewName('');
 			setNewNumber('');
+			setFilter('');
 		}
 	};
 
@@ -48,6 +47,13 @@ const App = () => {
 	};
 
 	// show filtered names
+	const handleFilter = (event) => {
+		setFilter(event.target.value);
+		const filteredNames = persons.filter((person) =>
+			person.name.toLowerCase().includes(filter.toLowerCase())
+		);
+		setPersons(filteredNames);
+	};
 
 	return (
 		<div>
@@ -55,7 +61,7 @@ const App = () => {
 			<h2>Phonebook</h2>
 			<div>
 				Filter shown with:
-				<input />
+				<input value={filter} onChange={handleFilter} />
 			</div>
 			<h2>Add a new name and number</h2>
 			<form onSubmit={addName}>
