@@ -2,53 +2,83 @@ import React, { useState } from 'react';
 
 const App = () => {
 	// use the person's name as value of the key property
-	const [persons, setPersons] = useState([]);
+	const [persons, setPersons] = useState([
+		{ name: 'Arto Hellas', number: '040-123456', id: 1 },
+		{ name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+		{ name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+		{ name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
+	]);
 	// controls the form input element
 	const [newName, setNewName] = useState('input name...');
 	// name already exists in the phonebook
 	const [newNameExists, setNewNameExists] = useState(false);
+	// set the new phone number
+	const [newNumber, setNewNumber] = useState('input phone number...');
+	// filter the phonebook
+	const [showAll, setShowAll] = useState(true);
 
 	const addName = (event) => {
 		event.preventDefault();
 		console.log('button clicked', event.target);
 		const nameObject = {
-			content: newName,
+			name: newName,
+			number: newNumber,
+			filter: newName.toLowerCase(),
 			id: persons.length + 1,
 		};
 		// check if name already exists
-		const nameExists = persons.some((person) => person.content === newName);
+		const nameExists = persons.some((person) => person.name === newName);
 		if (nameExists) {
 			alert(`${newName} is already added to the phonebook!`);
 		} else {
 			setPersons(persons.concat(nameObject));
 			setNewName('');
+			setNewNumber('');
 		}
 	};
 
 	const handleNameChange = (event) => {
 		setNewName(event.target.value);
-		console.log('input changed', event.target.value);
+		console.log('name changed', event.target.value);
 	};
+
+	const handleNumberChange = (event) => {
+		setNewNumber(event.target.value);
+		console.log('number changed', event.target.value);
+	};
+
+	// show filtered names
 
 	return (
 		<div>
-			<div>debug: {newNameExists}</div>
+			<div>debug: {}</div>
 			<h2>Phonebook</h2>
+			<div>
+				Filter shown with:
+				<input />
+			</div>
+			<h2>Add a new name and number</h2>
 			<form onSubmit={addName}>
 				<div>
 					name: <input value={newName} onChange={handleNameChange} />
+				</div>
+				<div>
+					number: <input value={newNumber} onChange={handleNumberChange} />
 				</div>
 				<div>
 					<button type='submit'>add</button>
 				</div>
 			</form>
 			<h2>Numbers</h2>
-
-			<ul>
+			<div>
 				{persons.map((person) => (
-					<li key={person.id}>{person.content}</li>
+					<p key={person.id}>
+						{person.name}
+						<br />
+						{person.number}
+					</p>
 				))}
-			</ul>
+			</div>
 		</div>
 	);
 };
@@ -70,7 +100,7 @@ export default App;
 // 		event.preventDefault();
 // 		console.log('button clicked', event.target);
 // 		const noteObject = {
-// 			content: newNote,
+// 			name: newNote,
 // 			date: new Date().toISOString(),
 // 			// 50% chance of being important
 // 			important: Math.random() < 0.5,
