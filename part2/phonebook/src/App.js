@@ -1,16 +1,28 @@
-import { useState } from 'react';
+// *-- PHONEBOOK --*
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 
 const App = () => {
+	const [persons, setPersons] = useState([]);
+	useEffect(() => {
+		console.log('App.js is running');
+		axios.get('http://localhost:3001/persons').then((response) => {
+			console.log('response', response);
+			setPersons(response.data);
+		});
+	}, []);
+	console.log('persons', persons);
+
 	return (
 		<div>
 			<h2>Phonebook</h2>
 			<Filter />
-			<h2>Add a new name and number</h2>
+			<h2>add a new</h2>
 			<PersonForm />
-			<h3>Numbers</h3>
+			<h2>Numbers</h2>
 			<Persons />
 		</div>
 	);
@@ -20,7 +32,8 @@ export default App;
 
 // * -- PRACTICE -- *
 
-// import React, { useState } from 'react';
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
 // import Note from './components/Note';
 
 // const App = () => {
@@ -28,6 +41,16 @@ export default App;
 // 	const [newNote, setNewNote] = useState('a new note...');
 // 	// Shows all added notes
 // 	const [showAll, setShowAll] = useState(true);
+
+// 	useEffect(() => {
+// 		// data hasnt been fetched from the server yet
+// 		console.log('effect');
+// 		axios.get('http://localhost:3001/notes').then((response) => {
+// 			console.log('promise fulfilled');
+// 			setNotes(response.data);
+// 		});
+// 	}, []);
+// 	console.log('render', notes.length, 'notes');
 
 // 	const addNote = (event) => {
 // 		event.preventDefault();
@@ -58,7 +81,7 @@ export default App;
 // 		<div>
 // 			<h1>Notes</h1>
 // 			<ul>
-// 				{notes.map((note) => (
+// 				{notesToShow.map((note) => (
 // 					<Note key={note.id} note={note} />
 // 				))}
 // 			</ul>
@@ -67,11 +90,7 @@ export default App;
 // 					show {showAll ? 'important' : 'all'}
 // 				</button>
 // 			</div>
-// 			<ul>
-// 				{notesToShow.map((note) => (
-// 					<Note key={note.id} note={note} />
-// 				))}
-// 			</ul>
+
 // 			<form onSubmit={addNote}>
 // 				<input value={newNote} onChange={handleNoteChange} />
 // 				<button type='submit'>save</button>

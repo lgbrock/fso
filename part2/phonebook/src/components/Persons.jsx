@@ -10,7 +10,6 @@ const Persons = () => {
 
 	return (
 		<div>
-			<h2>Numbers</h2>
 			<ul>
 				{persons.map((person) => (
 					<li key={person.id}>
