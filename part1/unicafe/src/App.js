@@ -45,12 +45,13 @@ const Statistics = (props) => {
 
 const StatisticLine = (props) => {
 	// always displays a single statistic
+	// show output in a table
+	console.log(props);
 	return (
-		<div>
-			<p>
-				{props.text} {props.value}
-			</p>
-		</div>
+		<tr>
+			<td>{props.text}</td>
+			<td>{props.value}</td>
+		</tr>
 	);
 };
 
