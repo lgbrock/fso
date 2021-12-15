@@ -23,13 +23,19 @@ const App = () => {
 			<h1>Give feedback</h1>
 			<button onClick={() => setGood(good + 1)}>good</button>
 			<button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-			<button onClick={() => setBad(bad - 1)}>bad</button>
+			<button onClick={() => setBad(bad + 1)}>bad</button>
 			<h1>Statistics</h1>
 			good {good}
 			<br />
 			neutral {neutral}
 			<br />
 			bad {bad}
+			<br />
+			all {good + neutral + bad}
+			<br />
+			average {(good - bad) / (good + neutral + bad)}
+			<br />
+			positive {(good / (good + neutral + bad)) * 100} %
 		</div>
 	);
 };
