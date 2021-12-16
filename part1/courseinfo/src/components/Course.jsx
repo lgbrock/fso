@@ -5,7 +5,7 @@ const Header = (props) => {
 	// name of course
 	return (
 		<div>
-			<h1>{props.course}</h1>
+			<h2>{props.course}</h2>
 		</div>
 	);
 };
