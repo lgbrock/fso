@@ -12,11 +12,25 @@ const App = () => {
 	];
 
 	const [selected, setSelected] = useState(0);
+	// store votes of each anecdotes into an array in the components state
+	const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
 
 	return (
 		<div>
+			<h1>Anecdote of the day</h1>
 			{anecdotes[selected]}
 			<br />
+			has {votes[selected]} votes
+			<br />
+			<button
+				onClick={() =>
+					setVotes(
+						votes.map((vote, index) => (index === selected ? vote + 1 : vote))
+					)
+				}
+			>
+				vote
+			</button>
 			<button
 				onClick={() =>
 					setSelected(Math.floor(Math.random() * anecdotes.length))
