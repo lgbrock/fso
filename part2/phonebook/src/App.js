@@ -1,35 +1,69 @@
-// Update again
-// *-- PHONEBOOK --*
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Filter from './components/Filter';
-import PersonForm from './components/PersonForm';
-import Persons from './components/Persons';
+// *-- PHONEBOOK  REDO--*
+import React, { useState } from 'react';
 
 const App = () => {
-	const [persons, setPersons] = useState([]);
-	useEffect(() => {
-		console.log('App.js is running');
-		axios.get('http://localhost:3001/persons').then((response) => {
-			console.log('response', response);
-			setPersons(response.data);
-		});
-	}, []);
-	console.log('persons', persons);
+	const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
+	const [newName, setNewName] = useState('');
 
 	return (
 		<div>
 			<h2>Phonebook</h2>
-			<Filter />
-			<h2>add a new</h2>
-			<PersonForm />
+			<form>
+				<div>
+					name:{' '}
+					<input
+						value={newName}
+						onChange={(event) => setNewName(event.target.value)}
+					/>
+					name: <input />
+				</div>
+				<div>
+					<button type='submit'>add</button>
+				</div>
+			</form>
 			<h2>Numbers</h2>
-			<Persons />
+			<ul>
+				{persons.map((person) => (
+					<li key={person.name}>{person.name}</li>
+				))}
+			</ul>
 		</div>
 	);
 };
 
 export default App;
+
+// *-- PHONEBOOK --*
+// import { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import Filter from './components/Filter';
+// import PersonForm from './components/PersonForm';
+// import Persons from './components/Persons';
+
+// const App = () => {
+// 	const [persons, setPersons] = useState([]);
+// 	useEffect(() => {
+// 		console.log('App.js is running');
+// 		axios.get('http://localhost:3001/persons').then((response) => {
+// 			console.log('response', response);
+// 			setPersons(response.data);
+// 		});
+// 	}, []);
+// 	console.log('persons', persons);
+
+// 	return (
+// 		<div>
+// 			<h2>Phonebook</h2>
+// 			<Filter />
+// 			<h2>add a new</h2>
+// 			<PersonForm />
+// 			<h2>Numbers</h2>
+// 			<Persons />
+// 		</div>
+// 	);
+// };
+
+// export default App;
 
 // * -- PRACTICE -- *
 
