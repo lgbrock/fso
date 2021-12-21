@@ -4,14 +4,16 @@ import React, { useState } from 'react';
 const App = () => {
 	const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
 	const [newName, setNewName] = useState('');
+	const [newNumber, setNewNumber] = useState('');
 
 	const addName = (event) => {
 		event.preventDefault();
-		if (newName === '') {
+		if (newName === '' && newNumber === '') {
 			return;
 		}
 		const newPerson = {
 			name: newName,
+			number: newNumber,
 		};
 		// if name already exists, display error message
 		if (persons.find((person) => person.name === newPerson.name)) {
@@ -20,11 +22,13 @@ const App = () => {
 		}
 		setPersons(persons.concat(newPerson));
 		setNewName('');
+		setNewNumber('');
 	};
 
 	return (
 		<div>
 			<div>debug: {newName}</div>
+			<div>debug: {newNumber}</div>
 			<br />
 			<h2>Phonebook</h2>
 			<form onSubmit={addName}>
@@ -36,13 +40,22 @@ const App = () => {
 					/>
 				</div>
 				<div>
+					number:{' '}
+					<input
+						value={newNumber}
+						onChange={(event) => setNewNumber(event.target.value)}
+					/>
+				</div>
+				<div>
 					<button type='submit'>add</button>
 				</div>
 			</form>
 			<h2>Numbers</h2>
 			<div key={newName.id}>
 				{persons.map((person) => (
-					<p key={person.name}>{person.name} </p>
+					<p key={person.id}>
+						{person.name} {person.number}
+					</p>
 				))}
 			</div>
 		</div>
