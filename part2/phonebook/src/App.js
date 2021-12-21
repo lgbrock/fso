@@ -1,5 +1,6 @@
 // *-- PHONEBOOK  REDO--*
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
@@ -38,6 +39,15 @@ const App = () => {
 		);
 		setPersons(filteredNames);
 	};
+
+	// Get persons from server
+	useEffect(() => {
+		console.log('effect');
+		axios.get('http://localhost:3001/persons').then((response) => {
+			console.log('response', response);
+			setPersons(response.data);
+		});
+	}, []);
 
 	return (
 		<div>
@@ -104,14 +114,12 @@ export default App;
 // 	const [showAll, setShowAll] = useState(true);
 
 // 	useEffect(() => {
-// 		// data hasnt been fetched from the server yet
 // 		console.log('effect');
 // 		axios.get('http://localhost:3001/notes').then((response) => {
 // 			console.log('promise fulfilled');
 // 			setNotes(response.data);
 // 		});
 // 	}, []);
-// 	console.log('render', notes.length, 'notes');
 
 // 	const addNote = (event) => {
 // 		event.preventDefault();

@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-// import axios from 'axios';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
@@ -12,10 +11,10 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // });
 
 // *-- Unpractical Usages --*
-// axios.get('http://localhost:3001/notes').then(response => {
-//   const notes = response.data
-//   console.log(notes)
-// })
+// axios.get('http://localhost:3001/notes').then((response) => {
+// 	const notes = response.data;
+// 	console.log(notes);
+// });
 
 // const promise = axios.get('http://localhost:3001/notes');
 // promise.then((response) => {
