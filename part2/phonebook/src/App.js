@@ -28,11 +28,10 @@ const App = () => {
 		}
 		// if name does not exist, add new name to phonebook db
 		axios.post('http://localhost:3001/persons', newPerson).then((response) => {
-			console.log(response);
+			setPersons(persons.concat(response.data));
+			setNewName('');
+			setNewNumber('');
 		});
-		// setPersons(persons.concat(newPerson));
-		// setNewName('');
-		// setNewNumber('');
 	};
 
 	// filter names event handler
