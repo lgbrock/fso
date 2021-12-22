@@ -21,8 +21,14 @@
     {
       "content": "turkey dog is the best",
       "date": "2021-12-22T15:04:59.350Z",
-      "important": false,
+      "important": true,
       "id": 4
+    },
+    {
+      "content": "Another note to test",
+      "date": "2021-12-22T20:03:11.016Z",
+      "important": false,
+      "id": 5
     }
   ]
 }
