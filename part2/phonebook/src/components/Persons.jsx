@@ -1,15 +1,15 @@
 import React from 'react';
 
-const Persons = (props) => {
-	return (
-		<div key={props.newName}>
-			{props.persons.map((person) => (
-				<p key={person.id}>
-					{person.name} {person.number}
-				</p>
-			))}
-		</div>
-	);
+const Persons = ({ persons, toggleDelete }) => {
+	const label = persons.map((person) => {
+		return (
+			<p key={person.name}>
+				{person.name} {person.number}
+				<button onClick={() => toggleDelete(person.id)}>delete</button>
+			</p>
+		);
+	});
+	return <ul>{label}</ul>;
 };
 
 export default Persons;
