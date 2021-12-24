@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notifications';
 import phonebookService from './services/phonebook';
 
 const App = () => {
@@ -102,7 +103,7 @@ export default App;
 
 // import React, { useState, useEffect } from 'react';
 // import Note from './components/Note';
-// import Notification from './components/Notification';
+// import Notification from './components/NotesNotification';
 // import noteService from './services/notes';
 // import './index.css';
 
