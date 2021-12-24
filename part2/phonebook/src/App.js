@@ -12,6 +12,7 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState('');
 	const [filter, setFilter] = useState('');
 	const [successMessage, setSuccessMessage] = useState(null);
+	const [errorMessage, setErrorMessage] = useState(null);
 
 	// get all names in phonebook db and display on window load
 	useEffect(() => {
@@ -68,7 +69,20 @@ const App = () => {
 								person.id !== returnedPerson.id ? person : returnedPerson
 							)
 						);
+						setSuccessMessage(`Updated ${newName}`);
+						setTimeout(() => {
+							setSuccessMessage(null);
+						}, 5000);
+						setNewName('');
+						setNewNumber('');
 					});
+			}
+			// alert that name has already been Deleted
+			else {
+				setErrorMessage(`${newPerson.name} has already been deleted`);
+				setTimeout(() => {
+					setErrorMessage(null);
+				}, 5000);
 			}
 		}
 	};
@@ -87,7 +101,10 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
-			<Notification message={successMessage} />
+			<Notification
+				successMessage={successMessage}
+				errorMessage={errorMessage}
+			/>
 			<Filter filter={filter} handleFilterChange={handleFilterChange} />
 			<h3>Add a new</h3>
 			<PersonForm

@@ -1,10 +1,12 @@
 import React from 'react';
 
-const Notifications = ({ message }) => {
-	if (message === null) {
-		return null;
-	}
-	return <div className='error'>{message}</div>;
+const Notifications = ({ successMessage, errorMessage }) => {
+	return (
+		<div className='notifications'>
+			{successMessage && <div className='success'>{successMessage}</div>}
+			{errorMessage && <div className='error'>{errorMessage}</div>}
+		</div>
+	);
 };
 
 export default Notifications;
