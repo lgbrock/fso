@@ -3,7 +3,7 @@ import React from 'react';
 const Persons = ({ persons, toggleDelete }) => {
 	const label = persons.map((person) => {
 		return (
-			<p key={person.name}>
+			<p className='persons' key={person.name}>
 				{person.name} {person.number}
 				<button onClick={() => toggleDelete(person.id)}>delete</button>
 			</p>

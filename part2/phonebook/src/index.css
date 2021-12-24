@@ -3,14 +3,14 @@ h1 {
 	font-style: italic;
 }
 
-.note {
+.persons {
 	color: grey;
 	padding-top: 5px;
 	font-size: 15px;
 }
 
 .error {
-	color: red;
+	color: green;
 	background: lightgrey;
 	font-size: 20px;
 	border-style: solid;

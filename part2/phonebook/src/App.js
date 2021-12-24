@@ -11,6 +11,7 @@ const App = () => {
 	const [newName, setNewName] = useState('');
 	const [newNumber, setNewNumber] = useState('');
 	const [filter, setFilter] = useState('');
+	const [successMessage, setSuccessMessage] = useState(null);
 
 	// get all names in phonebook db and display on window load
 	useEffect(() => {
@@ -45,6 +46,10 @@ const App = () => {
 		if (!existingPerson) {
 			phonebookService.create(newPerson).then((returnedPerson) => {
 				setPersons(persons.concat(returnedPerson));
+				setSuccessMessage(`Added ${newName}`);
+				setTimeout(() => {
+					setSuccessMessage(null);
+				}, 5000);
 				setNewName('');
 				setNewNumber('');
 			});
@@ -82,6 +87,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification message={successMessage} />
 			<Filter filter={filter} handleFilterChange={handleFilterChange} />
 			<h3>Add a new</h3>
 			<PersonForm
