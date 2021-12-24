@@ -11,12 +11,21 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState('');
 	const [filter, setFilter] = useState('');
 
-	// get all names in phonebook db
+	// get all names in phonebook db and display on window load
 	useEffect(() => {
 		phonebookService.getAll().then((initialPersons) => {
 			setPersons(initialPersons);
 		});
 	}, []);
+
+	// filter names event handler
+	const handleFilterChange = (event) => {
+		setFilter(event.target.value);
+		const filteredNames = persons.filter((person) =>
+			person.name.toLowerCase().includes(event.target.value.toLowerCase())
+		);
+		setPersons(filteredNames);
+	};
 
 	// add new name event handler
 	const addName = (event) => {
@@ -25,29 +34,37 @@ const App = () => {
 			name: newName,
 			number: newNumber,
 		};
-		if (newName === '' && newNumber === '') {
-			return;
-		}
-		// if name already exists, display error message
-		if (persons.find((person) => person.name === newPerson.name)) {
-			alert(`${newPerson.name} is already added to phonebook`);
-			return;
-		}
-		// if name does not exist, add new name to phonebook
-		phonebookService.create(newPerson).then((returnedPerson) => {
-			setPersons(persons.concat(returnedPerson));
-			setNewName('');
-			setNewNumber('');
-		});
-	};
 
-	// filter names event handler
-	const handleFilterChange = (event) => {
-		setFilter(event.target.value);
-		const filteredNames = persons.filter((person) =>
-			person.name.includes(event.target.value)
+		// check if name already exists
+		const existingPerson = persons.find(
+			(person) => person.name.toLowerCase() === newName.toLowerCase()
 		);
-		setPersons(filteredNames);
+
+		// add new name to database
+		if (!existingPerson) {
+			phonebookService.create(newPerson).then((returnedPerson) => {
+				setPersons(persons.concat(returnedPerson));
+				setNewName('');
+				setNewNumber('');
+			});
+		} else {
+			// update existing name in database
+			if (
+				window.confirm(
+					`${newPerson.name} is already added to phonebook, replace the old number with a new one?`
+				)
+			) {
+				phonebookService
+					.update(existingPerson.id, newPerson)
+					.then((returnedPerson) => {
+						setPersons(
+							persons.map((person) =>
+								person.id !== returnedPerson.id ? person : returnedPerson
+							)
+						);
+					});
+			}
+		}
 	};
 
 	// toggle delete of event handler
