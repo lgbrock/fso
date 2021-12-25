@@ -75,14 +75,28 @@ const App = () => {
 						}, 5000);
 						setNewName('');
 						setNewNumber('');
+					})
+					// alert that name has already been Deleted
+					.catch((err) => {
+						if (err.response.data) {
+							setErrorMessage(err.response.data.error);
+							setTimeout(() => {
+								setErrorMessage(null);
+							}, 5000);
+						} else {
+							setErrorMessage(
+								`Information of ${newPerson.name} has already been removed from server`
+							);
+							setPersons(
+								persons.filter((person) => person.id !== existingPerson.id)
+							);
+							setNewName('');
+							setNewNumber('');
+							setTimeout(() => {
+								setErrorMessage(null);
+							}, 5000);
+						}
 					});
-			}
-			// alert that name has already been Deleted
-			else {
-				setErrorMessage(`${newPerson.name} has already been deleted`);
-				setTimeout(() => {
-					setErrorMessage(null);
-				}, 5000);
 			}
 		}
 	};
