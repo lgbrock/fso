@@ -1,4 +1,6 @@
-const http = require('http');
+const express = require('express');
+const app = express();
+const repl = require('repl');
 
 let notes = [
 	{
@@ -20,11 +22,20 @@ let notes = [
 		important: true,
 	},
 ];
-const app = http.createServer((request, response) => {
-	response.writeHead(200, { 'Content-Type': 'application/json' });
-	response.end(JSON.stringify(notes));
+
+app.get('/', (req, res) => {
+	res.send('<h1>Hello, Turkey Dog!</h1>');
+});
+
+app.get('/api/notes/:id', (request, response) => {
+	const id = request.params.id;
+	console.log(id);
+	const note = notes.find((note) => note.id === id);
+	console.log(note);
+	response.json(note);
 });
 
 const PORT = 3001;
-app.listen(PORT);
-console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+	console.log(`Server running on port ${PORT}`);
+});
