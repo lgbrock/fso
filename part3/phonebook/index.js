@@ -1,11 +1,18 @@
 const express = require('express');
-const app = express();
 const morgan = require('morgan');
+const app = express();
 
 app.use(express.json());
 
 // middleware
-app.use(morgan('tiny'));
+// show body of name added to phonebook in morgan - more secure
+morgan.token('body', (req) => {
+	return JSON.stringify(req.body);
+});
+
+app.use(
+	morgan(':method :url :status :res[content-length] - :response-time ms :body')
+);
 
 let persons = [
 	{
