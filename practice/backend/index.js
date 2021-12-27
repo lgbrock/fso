@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 app.use(express.json());
+
+// middleware
+app.use(cors());
 
 let notes = [
 	{
@@ -58,10 +62,10 @@ app.post('/api/notes', (request, response) => {
 	}
 
 	const note = {
+		id: generateId(),
 		content: body.content,
 		important: body.important || false,
 		date: new Date(),
-		id: generateId(),
 	};
 
 	notes = notes.concat(note);
@@ -76,7 +80,7 @@ app.delete('/api/notes/:id', (request, response) => {
 	response.status(204).end();
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
