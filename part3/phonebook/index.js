@@ -1,18 +1,34 @@
+// SERVER
 const express = require('express');
-const morgan = require('morgan');
 const app = express();
+const cors = require('cors');
+const morgan = require('morgan');
 
+// middleware
+app.use(express.static('build'));
+app.use(cors());
 app.use(express.json());
 
 // middleware
 // show body of name added to phonebook in morgan - more secure
-morgan.token('body', (req) => {
-	return JSON.stringify(req.body);
-});
+// morgan.token('body', (req) => {
+// 	return JSON.stringify(req.body);
+// });
 
-app.use(
-	morgan(':method :url :status :res[content-length] - :response-time ms :body')
-);
+// app.use(
+// 	morgan(':method :url :status :res[content-length] - :response-time ms :body')
+// );
+
+// Displays contents of notes in terminal - more secure
+const requestLogger = (request, response, next) => {
+	console.log('Method:', request.method);
+	console.log('Path:  ', request.path);
+	console.log('Body:  ', request.body);
+	console.log('---');
+	next();
+};
+
+app.use(requestLogger);
 
 let persons = [
 	{
@@ -113,6 +129,7 @@ app.delete('/api/persons/:id', (req, res) => {
 	}
 });
 
-const PORT = 3001;
-app.listen(PORT);
-console.log(`Server running on port ${PORT}`);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+	console.log(`Server running on port ${PORT}`);
+});
