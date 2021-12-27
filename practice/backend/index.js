@@ -7,6 +7,7 @@ app.use(express.json());
 
 // middleware
 app.use(cors());
+app.use(express.static('build'));
 
 let notes = [
 	{
