@@ -10,6 +10,17 @@ app.use(express.static('build'));
 app.use(cors());
 app.use(express.json());
 
+// error handler middleware - must be the last called middleware
+const errorHandler = (error, request, response, next) => {
+	console.error(error.message);
+
+	if (error.name === 'CastError') {
+		return response.status(400).send({ error: 'malformatted id' });
+	}
+
+	next(error);
+};
+
 // Displays contents of notes in terminal - more secure
 const requestLogger = (request, response, next) => {
 	console.log('Method:', request.method);
@@ -76,21 +87,45 @@ app.post('/api/notes', (request, response) => {
 	});
 });
 
+// get note by id
 app.get('/api/notes/:id', (request, response) => {
-	Note.findById(request.params.id).then((note) => {
-		if (note) {
-			response.json(note);
-		} else {
-			response.status(404).end();
-		}
-	});
+	Note.findById(request.params.id)
+		.then((note) => {
+			if (note) {
+				response.json(note);
+			} else {
+				response.status(404).end();
+			}
+		})
+		.catch((error) => {
+			console.log(error);
+			response.status(400).send({ error: 'malformatted id' });
+		});
 });
 
+// delete note
 app.delete('/api/notes/:id', (request, response) => {
-	const id = Number(request.params.id);
-	notes = notes.filter((note) => note.id !== id);
+	Note.findByIdAndRemove(request.params.id)
+		.then((result) => {
+			response.status(204).end();
+		})
+		.catch((error) => next(error));
+});
 
-	response.status(204).end();
+// update note by id
+app.put('/api/notes/:id', (request, response, next) => {
+	const body = request.body;
+
+	const note = {
+		content: body.content,
+		important: body.important,
+	};
+
+	Note.findByIdAndUpdate(request.params.id, note, { new: true })
+		.then((updatedNote) => {
+			response.json(updatedNote);
+		})
+		.catch((error) => next(error));
 });
 
 // Displays error message in window if endpoint is not found
@@ -99,6 +134,8 @@ const unknownEndpoint = (request, response) => {
 };
 
 app.use(unknownEndpoint);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

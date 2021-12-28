@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/notes/61ca5cf12b616c25800b9e7e
+Content-Type: application/json
+
+{
+    "content": "Mongoose makes the use of MongoDB easier",
+    "important": true
+}
