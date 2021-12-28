@@ -1,8 +1,10 @@
 // SERVER
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
+const Person = require('./models/person');
 
 // middleware
 app.use(express.static('build'));
@@ -52,6 +54,10 @@ let persons = [
 		number: '39-23-6423122',
 	},
 ];
+
+app.get('/', (req, res) => {
+	res.send('<h1>Hello, Turkey Dog!</h1>');
+});
 
 app.get('/api/persons', (request, response) => {
 	response.json(persons);
