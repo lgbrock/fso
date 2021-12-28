@@ -21,6 +21,17 @@ app.use(express.json());
 // 	morgan(':method :url :status :res[content-length] - :response-time ms :body')
 // );
 
+// error handler middleware - must be the last called middleware
+const errorHandler = (error, request, response, next) => {
+	console.error(error.message);
+
+	if (error.name === 'CastError') {
+		return response.status(400).send({ error: 'malformatted id' });
+	}
+
+	next(error);
+};
+
 // Displays contents of notes in terminal - more secure
 const requestLogger = (request, response, next) => {
 	console.log('Method:', request.method);
@@ -32,71 +43,60 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger);
 
-let persons = [
-	{
-		id: 1,
-		name: 'Arto Hellas',
-		number: '040-123456',
-	},
-	{
-		id: 2,
-		name: 'Ada Lovelace',
-		number: '39-44-5323523',
-	},
-	{
-		id: 3,
-		name: 'Dan Abramov',
-		number: '12-43-234345',
-	},
-	{
-		id: 4,
-		name: 'Mary Poppendieck',
-		number: '39-23-6423122',
-	},
-];
-
 app.get('/', (req, res) => {
 	res.send('<h1>Hello, Turkey Dog!</h1>');
 });
 
 app.get('/api/persons', (request, response) => {
-	Person.find({}).then((persons) => {
-		response.json(persons);
-	});
+	Person.find({})
+		.then((persons) => {
+			response.json(persons);
+		})
+		.catch((error) => {
+			console.log(error);
+		});
 });
 
 app.get('/api/info', (request, response) => {
 	const date = new Date();
-	const info = Person.find({}).then((persons) => {
-		response.send(
-			`<p>Phonebook has info for ${persons.length} people</p>
+	const info = Person.find({})
+		.then((persons) => {
+			response.send(
+				`<p>Phonebook has info for ${persons.length} people</p>
 			<p>${date}</p>`
-		);
-		return info;
-	});
+			);
+			return info;
+		})
+		.catch((error) => {
+			console.log(error);
+		});
 });
 
-app.get('/api/persons/:id', (request, response) => {
-	Person.findById(request.params.id).then((person) => {
-		if (person) {
-			response.json(person);
-		} else {
-			response.status(404).end();
-		}
-	});
+app.get('/api/persons/:id', (request, response, next) => {
+	Person.findById(request.params.id)
+		.then((person) => {
+			if (person) {
+				response.json(person);
+			} else {
+				response.status(404).end();
+			}
+		})
+		.catch((error) => {
+			console.log('What is this?');
+			next(error);
+		});
 });
 
 const generateId = () => {
 	// create random id
-	const randomdId = Math.floor(Math.random() * 10000000) + 10000000;
+	const randomId = Math.floor(Math.random() * 10000000) + 10000000;
 	// check if id already exists
-	const idExists = persons.some((person) => person.id === randomdId);
-	// if id exists, generate new id
+	const idExists = Person.findById(randomId);
 	if (idExists) {
-		return generateId();
+		null;
+	} else {
+		return randomId;
 	}
-	// if id does not exist, return id
-	return randomdId;
 };
 
 // create a new person and save to database
@@ -120,11 +120,22 @@ app.post('/api/persons', (request, response) => {
 	});
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-	Person.findByIdAndRemove(req.params.id).then((result) => {
-		res.status(204).end();
-	});
+app.delete('/api/persons/:id', (req, res, next) => {
+	Person.findByIdAndRemove(req.params.id)
+		.then((result) => {
+			res.status(204).end();
+		})
+		.catch((error) => next(error));
 });
+
+// Displays error message in window if endpoint is not found
+const unknownEndpoint = (request, response) => {
+	response.status(404).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
