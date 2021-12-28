@@ -60,25 +60,30 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/persons', (request, response) => {
-	response.json(persons);
+	Person.find({}).then((persons) => {
+		response.json(persons);
+	});
 });
 
 app.get('/api/info', (request, response) => {
 	const date = new Date();
-	const info = `<p>Phonebook has info for ${persons.length} people</p>
-					<p>${date}</p>`;
-	response.send(info);
+	const info = Person.find({}).then((persons) => {
+		response.send(
+			`<p>Phonebook has info for ${persons.length} people</p>
+			<p>${date}</p>`
+		);
+		return info;
+	});
 });
 
 app.get('/api/persons/:id', (request, response) => {
-	const id = Number(request.params.id);
-	const person = persons.find((person) => person.id === id);
-
-	if (person) {
-		response.json(person);
-	} else {
-		response.status(404).end();
-	}
+	Person.findById(request.params.id).then((person) => {
+		if (person) {
+			response.json(person);
+		} else {
+			response.status(404).end();
+		}
+	});
 });
 
 const generateId = () => {
@@ -94,48 +99,64 @@ const generateId = () => {
 	return randomdId;
 };
 
+// create a new person and save to database
 app.post('/api/persons', (request, response) => {
 	const body = request.body;
 
-	if (!body.name || !body.number) {
-		return response.status(400).json({
-			error: 'name or number missing',
-		});
+	if (body.name === undefined) {
+		return response.status(400).json({ error: 'name missing' });
+	} else if (body.number === undefined) {
+		return response.status(400).json({ error: 'number missing' });
 	}
 
-	// name already exists
-	const nameExists = persons.some((person) => person.name === body.name);
-
-	if (nameExists) {
-		return response.status(400).json({
-			error: 'name must be unique',
-		});
-	}
-
-	const person = {
+	const person = new Person({
 		name: body.name,
 		number: body.number,
 		id: generateId(),
-	};
+	});
 
-	persons = persons.concat(person);
-
-	response.json(person);
+	person.save().then((savedPerson) => {
+		response.json(savedPerson);
+	});
 });
 
 app.delete('/api/persons/:id', (req, res) => {
-	const id = Number(req.params.id);
-	const person = persons.find((person) => person.id === id);
-
-	if (person) {
-		persons = persons.filter((person) => person.id !== id);
+	Person.findByIdAndRemove(req.params.id).then((result) => {
 		res.status(204).end();
-	} else {
-		res.status(404).end();
-	}
+	});
 });
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
+
+// create person without multiple entries
+// app.post('/api/persons', (request, response) => {
+// 	const body = request.body;
+
+// 	if (!body.name || !body.number) {
+// 		return response.status(400).json({
+// 			error: 'name or number missing',
+// 		});
+// 	}
+
+// 	// name already exists
+// 	const nameExists = persons.some((person) => person.name === body.name);
+
+// 	if (nameExists) {
+// 		return response.status(400).json({
+// 			error: 'name must be unique',
+// 		});
+// 	}
+
+// 	const person = {
+// 		name: body.name,
+// 		number: body.number,
+// 		id: generateId(),
+// 	};
+
+// 	persons = persons.concat(person);
+
+// 	response.json(person);
+// });
