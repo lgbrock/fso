@@ -1,7 +1,7 @@
-PUT http://localhost:3001/api/notes/61ca5cf12b616c25800b9e7e
+PUT http://localhost:3001/api/notes/61cb3279c93f941e9fc037c4
 Content-Type: application/json
 
 {
-    "content": "Mongoose makes the use of MongoDB easier",
-    "important": true
+    "content": "VS Code REST client is pretty good!",
+    "important": false
 }
