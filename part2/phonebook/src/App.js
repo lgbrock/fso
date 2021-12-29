@@ -16,9 +16,10 @@ const App = () => {
 
 	// get all names in phonebook db and display on window load
 	useEffect(() => {
-		phonebookService.getAll().then((initialPersons) => {
-			setPersons(initialPersons);
-		});
+		phonebookService
+			.getAll()
+			.then((initialPersons) => setPersons(initialPersons))
+			.catch((error) => alert(error));
 	}, []);
 
 	// filter names event handler
@@ -45,15 +46,23 @@ const App = () => {
 
 		// add new name to database
 		if (!existingPerson) {
-			phonebookService.create(newPerson).then((returnedPerson) => {
-				setPersons(persons.concat(returnedPerson));
-				setSuccessMessage(`Added ${newName}`);
-				setTimeout(() => {
-					setSuccessMessage(null);
-				}, 5000);
-				setNewName('');
-				setNewNumber('');
-			});
+			phonebookService
+				.create(newPerson)
+				.then((returnedPerson) => {
+					setPersons(persons.concat(returnedPerson));
+					setSuccessMessage(`Added ${newName}`);
+					setTimeout(() => {
+						setSuccessMessage(null);
+					}, 3000);
+					setNewName('');
+					setNewNumber('');
+				})
+				.catch((error) => {
+					setErrorMessage(error.response.data.error);
+					setTimeout(() => {
+						setErrorMessage(null);
+					}, 5000);
+				});
 		} else {
 			// update existing name in database
 			if (

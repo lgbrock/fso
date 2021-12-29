@@ -5,11 +5,13 @@ const Persons = ({ persons, toggleDelete }) => {
 		return (
 			<p className='persons' key={person.name}>
 				{person.name} {person.number}
-				<button onClick={() => toggleDelete(person.id)}>delete</button>
+				<button className='btn' onClick={() => toggleDelete(person.id)}>
+					delete
+				</button>
 			</p>
 		);
 	});
-	return <ul>{label}</ul>;
+	return <p>{label}</p>;
 };
 
 export default Persons;
