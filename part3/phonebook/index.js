@@ -19,6 +19,8 @@ const errorHandler = (error, request, response, next) => {
 
 	if (error.name === 'CastError') {
 		return response.status(400).send({ error: 'malformatted id' });
+	} else if (error.name === 'ValidationError') {
+		return response.status(400).json({ error: error.message });
 	}
 
 	next(error);
@@ -35,10 +37,6 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger);
 
-app.get('/', (req, res) => {
-	res.send('<h1>Hello, Turkey Dog!</h1>');
-});
-
 // GET all persons in database
 app.get('/api/persons', (request, response) => {
 	Person.find({}).then((persons) => {
@@ -47,23 +45,20 @@ app.get('/api/persons', (request, response) => {
 });
 
 // GET info of people in database
-app.get('/api/info', (request, response) => {
-	const date = new Date();
-	const info = Person.find({})
+app.get('/api/info', (request, response, next) => {
+	const date = new Date(Date.now());
+	Person.find({})
 		.then((persons) => {
 			response.send(
 				`<p>Phonebook has info for ${persons.length} people</p>
 			<p>${date}</p>`
 			);
-			return info;
 		})
-		.catch((error) => {
-			console.log(error);
-		});
+		.catch((error) => next(error));
 });
 
-// GET person by id oin database
-app.get('/api/persons/:id', (request, response) => {
+// GET person by id in database
+app.get('/api/persons/:id', (request, response, next) => {
 	Person.findById(request.params.id)
 		.then((person) => {
 			if (person) {
@@ -72,44 +67,24 @@ app.get('/api/persons/:id', (request, response) => {
 				response.status(404).end();
 			}
 		})
-		.catch((error) => {
-			console.log(error);
-			response.status(400).send({ error: 'malformatted id' });
-		});
+		.catch((error) => next(error));
 });
 
-// generate random id for person
-const generateId = () => {
-	// create random id
-	const randomId = Math.floor(Math.random() * 10000000) + 10000000;
-	// check if id already exists
-	const idExists = Person.findById(randomId);
-	if (idExists) {
-		null;
-	} else {
-		return randomId;
-	}
-};
-
 // POST/create a new person and save to database
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
 	const body = request.body;
-
-	if (body.name === undefined) {
-		return response.status(400).json({ error: 'name missing' });
-	} else if (body.number === undefined) {
-		return response.status(400).json({ error: 'number missing' });
-	}
 
 	const person = new Person({
 		name: body.name,
 		number: body.number,
-		id: generateId(),
+		// id: generateId(),
 	});
 
-	person.save().then((savedPerson) => {
-		response.json(savedPerson);
-	});
+	person
+		.save()
+		.then((savedPerson) => savedPerson.toJSON())
+		.then((savedPerson) => response.json(savedPerson))
+		.catch((error) => next(error));
 });
 
 // DELETE person from database
@@ -130,10 +105,11 @@ app.put('/api/persons/:id', (request, response, next) => {
 		number: body.number,
 	};
 
-	Person.findByIdAndUpdate(request.params.id, person, { new: true })
-		.then((updatedPerson) => {
-			response.json(updatedPerson);
-		})
+	Person.findByIdAndUpdate(request.params.id, person, {
+		new: true,
+		runValidators: true,
+	})
+		.then((updatedPerson) => response.json(updatedPerson))
 		.catch((error) => next(error));
 });
 
@@ -151,7 +127,7 @@ app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
 
-// create person without multiple entries
+// * -- CREATE PERSON WITHOUT MULTIPLE ENTRIES FOR SAME NAME -- *
 // app.post('/api/persons', (request, response) => {
 // 	const body = request.body;
 
@@ -181,6 +157,7 @@ app.listen(PORT, () => {
 // 	response.json(person);
 // });
 
+// * -- MORGAN -- *
 // show body of name added to phonebook in morgan - more secure
 // morgan.token('body', (req) => {
 // 	return JSON.stringify(req.body);
@@ -189,3 +166,16 @@ app.listen(PORT, () => {
 // app.use(
 // 	morgan(':method :url :status :res[content-length] - :response-time ms :body')
 // );
+
+// * -- GENERATE RANDOM ID FOR PERSON -- *
+// const generateId = () => {
+// 	// create random id
+// 	const randomId = Math.floor(Math.random() * 10000000) + 10000000;
+// 	// check if id already exists
+// 	const idExists = Person.findById(randomId);
+// 	if (idExists) {
+// 		null;
+// 	} else {
+// 		return randomId;
+// 	}
+// };
