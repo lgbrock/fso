@@ -106,6 +106,10 @@ describe('favorite blog', () => {
 	test('of list has multiple blogs, return blog with most likes', () => {
 		const result = listHelper.favoriteBlog(blogs);
 
-		expect(result).toEqual(blogs[2]);
+		expect(result).toMatchObject({
+			title: 'Canonical string reduction',
+			author: 'Edsger W. Dijkstra',
+			likes: 12,
+		});
 	});
 });
