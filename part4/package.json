@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "node index.js",
 		"dev": "nodemon index.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "jest --verbose"
 	},
 	"author": "Logan Brock",
 	"license": "MIT",
@@ -16,5 +16,11 @@
 		"express": "^4.17.2",
 		"mongoose": "^6.1.4",
 		"nodemon": "^2.0.15"
+	},
+	"devDependencies": {
+		"jest": "^27.4.5"
+	},
+	"jest": {
+		"testEnvironment": "node"
 	}
 }
