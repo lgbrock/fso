@@ -4,14 +4,14 @@
 	"description": "Backend for notes",
 	"main": "index.js",
 	"scripts": {
-		"start": "node index.js",
-		"dev": "nodemon index.js",
+		"start": "NODE_ENV=production node index.js",
+		"dev": "NODE_ENV=development nodemon index.js",
 		"build:ui": "rm -rf build && cd ../frontend/ && npm run build && cp -r build ../backend",
 		"deploy": "git push heroku master",
 		"deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
 		"logs:prod": "heroku logs --tail",
 		"lint": "eslint .",
-		"test": "jest --verbose"
+		"test": "NODE_ENV=test jest --verbose --runInBand"
 	},
 	"author": "Logan Brock",
 	"license": "MIT",
@@ -22,11 +22,10 @@
 		"mongoose": "^6.1.4"
 	},
 	"devDependencies": {
+		"cross-env": "^7.0.3",
 		"eslint": "^8.5.0",
 		"jest": "^27.4.5",
-		"nodemon": "^2.0.15"
-	},
-	"jest": {
-		"testEnvironment": "node"
+		"nodemon": "^2.0.15",
+		"supertest": "^6.1.6"
 	}
 }

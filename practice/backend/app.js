@@ -6,6 +6,32 @@ const notesRouter = require('./controllers/notes');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 const mongoose = require('mongoose');
+const supertest = require('supertest');
+const app = require('../app');
+
+const api = supertest(app);
+
+const Note = require('../models/note');
+
+const initialNotes = [
+	{
+		content: 'HTML is easy',
+		date: new Date(),
+		important: false,
+	},
+	{
+		content: 'Browser can execute only Javascript',
+		date: new Date(),
+		important: true,
+	},
+];
+beforeEach(async () => {
+	await Note.deleteMany({});
+	let noteObject = new Note(initialNotes[0]);
+	await noteObject.save();
+	noteObject = new Note(initialNotes[1]);
+	await noteObject.save();
+});
 
 logger.info('connecting to', config.MONGODB_URI);
 
