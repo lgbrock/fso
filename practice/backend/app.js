@@ -7,11 +7,9 @@ const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
-const app = require('../app');
-
 const api = supertest(app);
 
-const Note = require('../models/note');
+const Note = require('./models/note');
 
 const initialNotes = [
 	{
