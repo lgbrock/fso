@@ -3,16 +3,17 @@ const mongoose = require('mongoose');
 const noteSchema = new mongoose.Schema({
 	content: {
 		type: String,
-		minLength: 5,
 		required: true,
+		minlength: 5,
 	},
-	date: {
-		type: Date,
-	},
+	date: Date,
 	important: Boolean,
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+	},
 });
 
-// how to not return the mongo versioning field, __v, to the frontend
 noteSchema.set('toJSON', {
 	transform: (document, returnedObject) => {
 		returnedObject.id = returnedObject._id.toString();
