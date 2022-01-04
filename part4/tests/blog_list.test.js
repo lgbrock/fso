@@ -6,6 +6,11 @@ const app = require('../app');
 const api = supertest(app);
 const Blog = require('../models/blog');
 
+beforeEach(async () => {
+	await Blog.deleteMany({}); //empty the collection
+	console.log('cleared');
+});
+
 // check if blog post are returned in json format
 test('blogs are returned in json format', async () => {
 	await api
@@ -29,27 +34,28 @@ test('unique identifier property of the blog posts is named id', async () => {
 });
 
 // test that verifies a successful new blog post
-// test('a successful new blog post', async () => {
-// 	const newBlog = {
-// 		title: 'Test blog',
-// 		author: 'Test author',
-// 		url: 'http://www.test.com',
-// 		likes: 5,
-// 	};
+test('a successful new blog post', async () => {
+	const newBlog = {
+		title: 'Test blog',
+		author: 'Test author',
+		url: 'http://www.test.com',
+		likes: 5,
+	};
 
-// 	await api
-// 		.post('/api/blogs')
-// 		.send(newBlog)
-// 		.expect(201)
-// 		.expect('Content-Type', /application\/json/);
+	await api
+		.post('/api/blogs')
+		.send(newBlog)
+		.expect(201)
+		.expect('Content-Type', /application\/json/);
 
-// 	const response = await api.get('/api/blogs');
+	const response = await api.get('/api/blogs');
 
-// 	const titles = response.body.map((r) => r.title);
+	console.log('blog response', response.body);
+	const contents = response.body.map((r) => r.title);
 
-// 	expect(response.body).toHaveLength(Blog.length + 1);
-// 	expect(titles).toContain('Test blog');
-// });
+	expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
+	expect(contents).toContain('Test blog');
+});
 
 // test that verifies the likes property is missing from the request
 test('the likes property is missing from the request', async () => {
@@ -59,13 +65,28 @@ test('the likes property is missing from the request', async () => {
 		url: 'http://www.test.com',
 	};
 
-	await api.post('/api/blogs').send(newBlog).expect(400);
+	await api.post('/api/blogs').send(newBlog).expect(201);
 
 	const response = await api.get('/api/blogs');
-	expect(response.body.likes).toBe(0);
+
+	console.log('blog response', response.body);
+	const contents = response.body.find((r) => r.title === newBlog.title);
+
+	expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
+
+	expect(contents.likes).toBe(0);
 });
 
-// test verifies that if the title and url properties are missing from the request data, the backend responds to the request with the status code 400 Bad Request
+// test that verifies 400 code when tile and url are missing
+test('400 code when tile and url are missing', async () => {
+	const newBlog = {
+		author: 'Test author',
+		url: 'http://www.test.com',
+		likes: 5,
+	};
+
+	await api.post('/api/blogs').send(newBlog).expect(400);
+});
 
 afterAll(() => {
 	mongoose.connection.close();
