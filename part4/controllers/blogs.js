@@ -17,13 +17,23 @@ blogsRouter.post('/', (request, response) => {
 
 // DELETE blog posts
 blogsRouter.delete('/:id', async (request, response) => {
-	console.log('params', request.params);
 	const result = await Blog.findByIdAndRemove(request.params.id);
-	console.log('result', result);
+
 	if (!result) {
 		return response.status(404).send({ error: 'BLOG_NOT_FOUND' });
 	}
 	response.status(204).end();
+});
+
+// PUT/update blog posts
+blogsRouter.put('/:id', async (request, response) => {
+	const result = await Blog.findByIdAndUpdate(request.params.id, request.body, {
+		new: true,
+	});
+	if (!result) {
+		return response.status(404).send({ error: 'BLOG_NOT_FOUND' });
+	}
+	response.status(200).json(result);
 });
 
 module.exports = blogsRouter;

@@ -116,6 +116,34 @@ describe('deleting a blog', () => {
 	});
 });
 
+describe('updating a blog', () => {
+	test('succeeds with status code 200 if likes are valid', async () => {
+		const blogsAtStart = await helper.blogsInDb();
+		const blogToUpdate = blogsAtStart[0];
+
+		blogToUpdate.likes = blogToUpdate.likes + 1;
+
+		await api
+			.put(`/api/blogs/${blogToUpdate.id}`)
+			.send(blogToUpdate)
+			.expect(200);
+
+		const blogsAtEnd = await helper.blogsInDb();
+
+		expect(blogsAtEnd).toHaveLength(blogsAtStart.length);
+
+		const contents = blogsAtEnd.map((r) => r.likes);
+
+		expect(contents).toContain(blogToUpdate.likes);
+	});
+
+	test('fails with status code 400 if likes are invalid', async () => {
+		const invalidBlogId = '5fa64876e60b7b4be14a2d37';
+
+		await api.put(`/api/blogs/${invalidBlogId}`).send({ likes: 0 }).expect(404);
+	});
+});
+
 afterAll(() => {
 	mongoose.connection.close();
 });
