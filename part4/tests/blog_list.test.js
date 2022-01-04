@@ -84,13 +84,35 @@ describe('when there is initially some blogs saved', () => {
 
 	// test that verifies 400 code when tile and url are missing
 	test('400 code when tile and url are missing', async () => {
-		const newBlog = {
-			author: 'Test author',
-			url: 'http://www.test.com',
-			likes: 5,
-		};
+		const noTitleAndUrl = await helper.noteExistingTitleAndUrl();
 
-		await api.post('/api/blogs').send(newBlog).expect(400);
+		console.log(noTitleAndUrl);
+
+		await api.post('/api/blogs').send(noTitleAndUrl).expect(400);
+	});
+});
+
+describe('deleting a blog', () => {
+	test('succeeds with status code 204 with valid id', async () => {
+		const blogsAtStart = await helper.blogsInDb();
+		const blogsToDelete = await helper.blogsInDb();
+
+		const blogToDelete = blogsToDelete[0];
+
+		await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+		const blogsAtEnd = await helper.blogsInDb();
+
+		expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
+
+		const contents = blogsAtEnd.map((r) => r.title);
+
+		expect(contents).not.toContain(blogToDelete.title);
+	});
+
+	test('fails with status code 404 if invalid id', async () => {
+		const invalidBlogId = '5fa64876e60b7b4be14a2d37';
+		await api.delete(`/api/blogs/${invalidBlogId}`).expect(404);
 	});
 });
 

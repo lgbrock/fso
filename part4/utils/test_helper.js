@@ -70,6 +70,13 @@ const nonExistingId = async () => {
 	return blog._id.toString();
 };
 
+const noteExistingTitleAndUrl = async () => {
+	const blog = new Blog({ title: 'Test blog', url: 'http://www.test.com' });
+	await blog.save();
+
+	return blog._id.toString();
+};
+
 const blogsInDb = async () => {
 	const blogs = await Blog.find({});
 	return blogs.map((blog) => blog.toJSON());
@@ -79,5 +86,6 @@ module.exports = {
 	listWithOneBlog,
 	initialBlogs,
 	nonExistingId,
+	noteExistingTitleAndUrl,
 	blogsInDb,
 };

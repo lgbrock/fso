@@ -122,7 +122,3 @@ describe('deletion of a note', () => {
 afterAll(() => {
 	mongoose.connection.close();
 });
-
-afterAll(() => {
-	mongoose.connection.close();
-});
