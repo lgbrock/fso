@@ -8,14 +8,9 @@ const api = supertest(app);
 
 beforeEach(async () => {
 	await User.deleteMany({});
-	console.log('cleared users');
-
-	console.log('adding new blog');
 	const newUser = helper.initialUsers.map((user) => new User(user));
 	const promiseArray = newUser.map((user) => user.save());
 	await Promise.all(promiseArray);
-
-	console.log('dunzo');
 });
 
 describe('creating a new user', () => {
@@ -27,6 +22,33 @@ describe('creating a new user', () => {
 		};
 
 		await api.post('/api/users').send(newUser).expect(201);
+	});
+	test('invalid user - username is already in database', async () => {
+		const newUser = {
+			username: 'testUser1',
+			name: 'Test User 4',
+			password: 'password',
+		};
+
+		await api.post('/api/users').send(newUser).expect(400);
+	});
+	test('invalid user - username less than 3 characters', async () => {
+		const newUser = {
+			username: 'te',
+			name: 'Test User 4',
+			password: 'password',
+		};
+
+		await api.post('/api/users').send(newUser).expect(400);
+	});
+	test('invalid user - password less than 3 characters', async () => {
+		const newUser = {
+			username: 'testUser5',
+			name: 'Test User 4',
+			password: 'pa',
+		};
+		// change models/user in order to work with this test
+		await api.post('/api/users').send(newUser).expect(400);
 	});
 });
 
