@@ -1,4 +1,3 @@
-const { before } = require('lodash');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const helper = require('../utils/test_helper');

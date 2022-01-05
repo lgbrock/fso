@@ -17,6 +17,10 @@ const blogSchema = new mongoose.Schema({
 		type: Number,
 		required: false,
 	},
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+	},
 });
 
 // how to not return the mongo versioning field, __v, to the frontend
