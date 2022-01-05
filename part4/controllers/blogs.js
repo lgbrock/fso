@@ -4,16 +4,26 @@ const User = require('../models/user');
 
 // GET all blogs
 blogsRouter.get('/', async (request, response) => {
-	const blogs = await Blog.find({}).populate('user', { blogs: 0 });
+	const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
 	response.json(blogs.map((blog) => blog.toJSON()));
 });
 
 // POST/create blog post
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response) => {
 	if (!request.body.likes) request.body.likes = 0;
-	const blog = new Blog(request.body);
+	const user = await User.findOne(); //pick any user
+	console.log('user', user);
+	const newBlogPayload = {
+		...request.body,
+		user: user._id,
+	};
+	const newBlog = new Blog(newBlogPayload);
+	const blogResult = await newBlog.save();
 
-	blog.save().then((result) => response.status(201).json(result));
+	user.blogs = user.blogs.concat(blogResult._id);
+	user.save();
+
+	response.status(201).json(blogResult);
 });
 
 // DELETE blog posts
