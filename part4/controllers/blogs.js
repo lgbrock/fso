@@ -49,7 +49,7 @@ blogsRouter.post('/', async (request, response) => {
 	response.status(201).json(blogResult);
 });
 
-// DELETE blog posts
+//DELETE blog posts
 blogsRouter.delete('/:id', async (request, response) => {
 	const result = await Blog.findByIdAndRemove(request.params.id);
 
