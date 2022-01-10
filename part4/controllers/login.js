@@ -3,9 +3,9 @@ const bcrypt = require('bcrypt');
 const loginRouter = require('express').Router();
 const User = require('../models/user');
 
+// POST/create jwt login
 loginRouter.post('/', async (request, response) => {
 	const body = request.body;
-
 	const user = await User.findOne({ username: body.username });
 	const passwordCorrect =
 		user === null
@@ -17,6 +17,8 @@ loginRouter.post('/', async (request, response) => {
 			error: 'invalid username or password',
 		});
 	}
+
+	console.log('password correct', passwordCorrect);
 
 	const userForToken = {
 		username: user.username,

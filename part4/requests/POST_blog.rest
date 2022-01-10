@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer 61d5ea431559d1f2da562c2a
+Verification: Bearer 
 
 {
-    "title": "Blog Test 2",
-    "author": "Logan Brock",
-    "url": "logangbrock.me",
-    "likes": 15
+    "title": "Blog Test",
+    "author": "Turkey",
+    "url": "turkey.me",
+    "likes": 10
 }
