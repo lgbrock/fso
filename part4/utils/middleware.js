@@ -32,10 +32,19 @@ const errorHandler = (error, request, response, next) => {
 		});
 	}
 
-	logger.error(error.message)
+	logger.error(error.message);
 
 	next(error);
 };
+
+// Get token from request header
+// const getTokenFrom = (request, response, next) => {
+// 	const authorization = request.get('authorization');
+// 	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+// 		return authorization.substring(7);
+// 	}
+// 	return null;
+// };
 
 module.exports = {
 	requestLogger,
