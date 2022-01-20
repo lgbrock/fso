@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 // GET all blogs
 blogsRouter.get('/', async (request, response) => {
-	const blogs = await Blog.find({}).populate('user', { blogs: 0 });
+	const blogs = await Blog.find({}).populate('user', { blogs: 1, username: 1 });
 
 	response.json(blogs.map((blog) => blog.toJSON()));
 });
@@ -21,33 +21,28 @@ const getTokenFrom = (request) => {
 
 // POST/create blog post
 blogsRouter.post('/', async (request, response) => {
-	if (!request.body.likes) request.body.likes = 0;
+	const body = request.body;
+
 	const token = getTokenFrom(request);
-	let decodedToken = null;
-
-	try {
-		decodedToken = jwt.verify(token, process.env.SECRET);
-		if (!token || !decodedToken.id) {
-			return response.status(401).json({ error: 'token missing or invalid' });
-		}
-	} catch (error) {
-		return response.status(401).json({ error: 'token missing or invalid' });
+	const decodedToken = jwt.verify(token, process.env.SECRET);
+	if (!decodedToken.id) {
+		response.status(401).json({ error: 'token missing or invalid' });
 	}
-
 	const user = await User.findById(decodedToken.id);
 
-	console.log('user', user);
-	const newBlogPayload = {
-		...request.body,
+	const blog = new Blog({
+		url: body.url,
+		title: body.title,
+		author: body.author,
 		user: user._id,
-	};
-	const newBlog = new Blog(newBlogPayload);
-	const blogResult = await newBlog.save();
+		likes: body.likes,
+	});
 
-	user.blogs = user.blogs.concat(blogResult._id);
-	user.save();
+	const savedBlog = await blog.save();
+	user.blogs = user.blogs.concat(savedBlog._id);
+	await user.save();
 
-	response.status(201).json(blogResult);
+	response.json(savedBlog);
 });
 
 // DELETE blog posts
