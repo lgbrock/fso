@@ -1,4 +1,5 @@
 const logger = require('../utils/logger');
+const User = require('../models/user');
 
 // Display contents of notes in terminal
 const requestLogger = (request, response, next) => {
@@ -46,8 +47,26 @@ const errorHandler = (error, request, response, next) => {
 // 	return null;
 // };
 
+// finds user and set it to the request object
+const userExtractor = (request, response, next) => {
+	const token = request.get('authorization');
+	if (token) {
+		const decodedToken = jwt.verify(token, process.env.SECRET);
+		const user = User.findById(decodedToken.id);
+		if (user) {
+			request.user = user;
+			next();
+		} else {
+			response.status(401).json({ error: 'token missing or invalid' });
+		}
+	} else {
+		response.status(401).json({ error: 'token missing or invalid' });
+	}
+};
+
 module.exports = {
 	requestLogger,
 	unknownEndpoint,
 	errorHandler,
+	userExtractor,
 };
