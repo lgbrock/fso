@@ -4,13 +4,49 @@ const User = require('../models/user');
 const initialNotes = [
 	{
 		content: 'HTML is easy',
-		date: new Date(),
 		important: false,
+		_id: 221212,
+		user: 123456,
 	},
 	{
-		content: 'Browser can execute only Javascript',
-		date: new Date(),
+		content: 'The most important operations of HTTP protocol are GET and POST',
 		important: true,
+		_id: 221255,
+		user: 123456,
+	},
+	{
+		content: 'A proper dinosaur codes with Java',
+		important: false,
+		_id: 221244,
+		user: 141414,
+	},
+];
+
+const initialUsers = [
+	{
+		username: 'mluukkai',
+		_id: 123456,
+		notes: [
+			{
+				content: 'HTML is easy',
+				important: false,
+			},
+			{
+				content:
+					'The most important operations of HTTP protocol are GET and POST',
+				important: true,
+			},
+		],
+	},
+	{
+		username: 'hellas',
+		_id: 141414,
+		notes: [
+			{
+				content: 'A proper dinosaur codes with Java',
+				important: false,
+			},
+		],
 	},
 ];
 
@@ -35,6 +71,7 @@ const usersInDb = async () => {
 
 module.exports = {
 	initialNotes,
+	initialUsers,
 	nonExistingId,
 	notesInDb,
 	usersInDb,

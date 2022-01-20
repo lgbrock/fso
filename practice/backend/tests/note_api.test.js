@@ -3,10 +3,8 @@ const supertest = require('supertest');
 const helper = require('./test_helper');
 const app = require('../app');
 const api = supertest(app);
-const bcrypt = require('bcrypt');
 
 const Note = require('../models/note');
-const User = require('../models/user');
 
 beforeEach(async () => {
 	await Note.deleteMany({});
@@ -56,7 +54,7 @@ describe('viewing a specific note', () => {
 		expect(resultNote.body).toEqual(processedNoteToView);
 	});
 
-	test('fails with status code 404 if note does not exist', async () => {
+	test('fails with statuscode 404 if note does not exist', async () => {
 		const validNonexistingId = await helper.nonExistingId();
 
 		console.log(validNonexistingId);
@@ -64,7 +62,7 @@ describe('viewing a specific note', () => {
 		await api.get(`/api/notes/${validNonexistingId}`).expect(404);
 	});
 
-	test('fails with status code 400 id is invalid', async () => {
+	test('fails with statuscode 400 id is invalid', async () => {
 		const invalidId = '5a3d5da59070081a82a3445';
 
 		await api.get(`/api/notes/${invalidId}`).expect(400);
@@ -72,7 +70,7 @@ describe('viewing a specific note', () => {
 });
 
 describe('addition of a new note', () => {
-	test('succeeds with valid data', async () => {
+	test('a valid note can be added', async () => {
 		const newNote = {
 			content: 'async/await simplifies making async calls',
 			important: true,
@@ -81,26 +79,27 @@ describe('addition of a new note', () => {
 		await api
 			.post('/api/notes')
 			.send(newNote)
-			.expect(200)
+			.expect(201)
 			.expect('Content-Type', /application\/json/);
 
-		const notesAtEnd = await helper.notesInDb();
-		expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
+		const response = await api.get('/api/notes');
 
-		const contents = notesAtEnd.map((n) => n.content);
+		const contents = response.body.map((r) => r.content);
+
+		expect(response.body).toHaveLength(initialNotes.length + 1);
 		expect(contents).toContain('async/await simplifies making async calls');
 	});
 
-	test('fails with status code 400 if data invaild', async () => {
+	test('note without content is not added', async () => {
 		const newNote = {
 			important: true,
 		};
 
 		await api.post('/api/notes').send(newNote).expect(400);
 
-		const notesAtEnd = await helper.notesInDb();
+		const response = await api.get('/api/notes');
 
-		expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
+		expect(response.body).toHaveLength(initialNotes.length);
 	});
 });
 
@@ -125,18 +124,19 @@ describe('when there is initially one user in db', () => {
 	beforeEach(async () => {
 		await User.deleteMany({});
 
-		const passwordHash = await bcrypt.hash('secret', 10);
+		const passwordHash = await bcrypt.hash('sekret', 10);
 		const user = new User({ username: 'root', passwordHash });
 
 		await user.save();
 	});
-	test('creation succeeds with fresh username', async () => {
+
+	test('creation succeeds with a fresh username', async () => {
 		const usersAtStart = await helper.usersInDb();
 
 		const newUser = {
-			username: 'lgbrock',
-			name: 'Logan Brock',
-			password: 'turkeydog',
+			username: 'mluukkai',
+			name: 'Matti Luukkainen',
+			password: 'salainen',
 		};
 
 		await api
@@ -151,7 +151,8 @@ describe('when there is initially one user in db', () => {
 		const usernames = usersAtEnd.map((u) => u.username);
 		expect(usernames).toContain(newUser.username);
 	});
-	test('creation fails with proper status code and message if username is already taken', async () => {
+
+	test('creation fails with proper statuscode and message if username already taken', async () => {
 		const usersAtStart = await helper.usersInDb();
 
 		const newUser = {
