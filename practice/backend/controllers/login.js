@@ -7,6 +7,7 @@ loginRouter.post('/', async (request, response) => {
 	const body = request.body;
 
 	const user = await User.findOne({ username: body.username });
+	// checks if the password is correct
 	const passwordCorrect =
 		user === null
 			? false
