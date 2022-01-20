@@ -20,8 +20,9 @@ usersRouter.post('/', async (request, response) => {
 });
 
 usersRouter.get('/', async (request, response) => {
-	const users = await User.find({});
-	response.json(users);
+	const users = await User.find({}).populate('notes', { content: 1, date: 1 });
+
+	response.json(users.map((u) => u.toJSON()));
 });
 
 module.exports = usersRouter;
