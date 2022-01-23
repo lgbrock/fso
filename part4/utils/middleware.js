@@ -38,14 +38,14 @@ const errorHandler = (error, request, response, next) => {
 	next(error);
 };
 
-// Get token from request header
-// const getTokenFrom = (request, response, next) => {
-// 	const authorization = request.get('authorization');
-// 	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-// 		return authorization.substring(7);
-// 	}
-// 	return null;
-// };
+const tokenExtractor = (request, response, next) => {
+	const authorization = request.get('authorization');
+	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+		request.token = authorization.substring(7);
+	}
+
+	next();
+};
 
 // finds user and set it to the request object
 const userExtractor = (request, response, next) => {
@@ -68,5 +68,6 @@ module.exports = {
 	requestLogger,
 	unknownEndpoint,
 	errorHandler,
+	tokenExtractor,
 	userExtractor,
 };
