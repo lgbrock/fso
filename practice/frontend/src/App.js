@@ -80,53 +80,73 @@ const App = () => {
 		}
 	};
 
+	const loginForm = () => (
+		<form onSubmit={handleLogin}>
+			<div>
+				username
+				<input
+					type='text'
+					value={username}
+					name='Username'
+					onChange={({ target }) => setUsername(target.value)}
+				/>
+			</div>
+			<div>
+				password
+				<input
+					type='password'
+					value={password}
+					name='Password'
+					onChange={({ target }) => setPassword(target.value)}
+				/>
+			</div>
+			<button type='submit'>login</button>
+		</form>
+	);
+
+	const noteForm = () => (
+		<form onSubmit={addNote}>
+			<input value={newNote} onChange={handleNoteChange} />
+			<button type='submit'>save</button>
+		</form>
+	);
+
 	// Show only the important notes
 	const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
 	return (
 		<div>
-			<h1>Notes</h1>
-			<Notification message={errorMessage} />
-			<form onSubmit={handleLogin}>
-				<div>
-					username
-					<input
-						type='text'
-						value={username}
-						name='username'
-						onChange={({ target }) => setUsername(target.value)}
-					/>
-				</div>
-				<div>
-					password
-					<input
-						type='password'
-						value={password}
-						name='Password'
-						onChange={({ target }) => setPassword(target.value)}
-					/>
-				</div>
-				<button type='submit'>login</button>
-			</form>
 			<div>
-				<button onClick={() => setShowAll(!showAll)}>
-					show {showAll ? 'important' : 'all'}
-				</button>
+				<h1>Notes</h1>
+
+				<Notification message={errorMessage} />
+
+				{user === null ? (
+					loginForm()
+				) : (
+					<div>
+						<p>{user.name} logged-in</p>
+						{noteForm()}
+					</div>
+				)}
+
+				<div>
+					<button onClick={() => setShowAll(!showAll)}>
+						show {showAll ? 'important' : 'all'}
+					</button>
+				</div>
+				<ul>
+					{notesToShow.map((note, i) => (
+						<Note
+							key={i}
+							note={note}
+							toggleImportance={() => toggleImportanceOf(note.id)}
+						/>
+					))}
+				</ul>
+
+				<Footer />
 			</div>
-			<ul>
-				{notesToShow.map((note, i) => (
-					<Note
-						key={i}
-						note={note}
-						toggleImportance={() => toggleImportanceOf(note.id)}
-					/>
-				))}
-			</ul>
-			<form onSubmit={addNote}>
-				<input value={newNote} onChange={handleNoteChange} />
-				<button type='submit'>save</button>
-			</form>
-			<Footer />
 		</div>
 	);
 };
