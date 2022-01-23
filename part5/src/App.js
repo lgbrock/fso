@@ -6,6 +6,7 @@ import loginService from './services/login';
 
 const App = () => {
 	const [blogs, setBlogs] = useState([]);
+	const [newBlog, setNewBlog] = useState('');
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [user, setUser] = useState(null);
@@ -22,6 +23,19 @@ const App = () => {
 			blogService.setToken(user.token);
 		}
 	}, []);
+
+	const addBlog = (event) => {
+		event.preventDefault();
+		const blogObject = {
+			title: newBlog,
+			author: '',
+			url: '',
+		};
+		blogService.create(blogObject).then((returnedBlog) => {
+			setBlogs(blogs.concat(returnedBlog));
+			setNewBlog('');
+		});
+	};
 
 	const handleLogin = async (event) => {
 		event.preventDefault();
@@ -66,6 +80,38 @@ const App = () => {
 		</form>
 	);
 
+	const blogForm = () => (
+		<form onSubmit={addBlog}>
+			<h2>Create new blog</h2>
+			<div>
+				title
+				<input
+					type='text'
+					value={newBlog}
+					name='Title'
+					onChange={({ target }) => setNewBlog(target.value)}
+				/>
+				<br />
+				author
+				<input
+					type='text'
+					value={newBlog}
+					name='Author'
+					onChange={({ target }) => setNewBlog(target.value)}
+				/>
+				<br />
+				url
+				<input
+					type='text'
+					value={newBlog}
+					name='Url'
+					onChange={({ target }) => setNewBlog(target.value)}
+				/>
+			</div>
+			<button type='submit'>create</button>
+		</form>
+	);
+
 	return (
 		<div>
 			{user === null ? (
@@ -74,6 +120,7 @@ const App = () => {
 				<div>
 					<p>{user.name} logged in</p>
 					<button onClick={() => setUser(null)}>logout</button>
+					{blogForm()}
 				</div>
 			)}
 
