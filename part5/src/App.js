@@ -73,6 +73,12 @@ const App = () => {
 		</form>
 	);
 
+	const handleLogout = (event) => {
+		event.preventDefault();
+		window.localStorage.removeItem('loggedBlogappUser');
+		setUser(null);
+	};
+
 	// BLOG FORM
 	const addBlog = (event) => {
 		event.preventDefault();
@@ -123,8 +129,18 @@ const App = () => {
 		<div>
 			<h1>Blog app</h1>
 			<Notification message={message} />
-			{user === null ? loginForm() : <p>{user.name} logged in</p>}
+			{user === null ? (
+				loginForm()
+			) : (
+				<p>
+					{user.name} logged in{' '}
+					{user === null ? null : (
+						<button onClick={handleLogout}>logout</button>
+					)}
+				</p>
+			)}
 			{user === null ? null : blogForm()}
+
 			{blogs.map((blog) => (
 				<Blog key={blog.id} blog={blog} />
 			))}
