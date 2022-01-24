@@ -80,45 +80,53 @@ const App = () => {
 	};
 
 	// BLOG FORM
-	const addBlog = (event) => {
+	const handleBlogChange = (event) => {
+		setNewBlog(event.target.value);
+	};
+
+	const addBlog = async (event) => {
 		event.preventDefault();
-		const blogObject = {
-			title: newBlog,
+		const response = await blogService.create(newBlog);
+		setBlogs(blogs.concat(response));
+		setMessage(`a new blog ${response.title} by ${response.author} added`);
+		setTimeout(() => {
+			setMessage(null);
+		}, 5000);
+		setNewBlog({
+			title: '',
 			author: '',
 			url: '',
-		};
-		blogService.create(blogObject).then((returnedBlog) => {
-			setBlogs(blogs.concat(returnedBlog));
-			setNewBlog('');
 		});
 	};
 
 	const blogForm = () => (
 		<form onSubmit={addBlog}>
-			<h2>Create new blog</h2>
+			<h2>Create new</h2>
 			<div>
 				title
 				<input
 					type='text'
-					value={newBlog}
+					value={newBlog.title}
 					name='Title'
-					onChange={({ target }) => setNewBlog(target.value)}
+					onChange={handleBlogChange}
 				/>
-				<br />
+			</div>
+			<div>
 				author
 				<input
 					type='text'
-					value={newBlog}
+					value={newBlog.author}
 					name='Author'
-					onChange={({ target }) => setNewBlog(target.value)}
+					onChange={handleBlogChange}
 				/>
-				<br />
+			</div>
+			<div>
 				url
 				<input
 					type='text'
-					value={newBlog}
+					value={newBlog.url}
 					name='Url'
-					onChange={({ target }) => setNewBlog(target.value)}
+					onChange={handleBlogChange}
 				/>
 			</div>
 			<button type='submit'>create</button>
@@ -132,18 +140,19 @@ const App = () => {
 			{user === null ? (
 				loginForm()
 			) : (
-				<p>
-					{user.name} logged in{' '}
-					{user === null ? null : (
+				<div>
+					<p>
+						{user.name} logged in
 						<button onClick={handleLogout}>logout</button>
-					)}
-				</p>
-			)}
-			{user === null ? null : blogForm()}
+					</p>
+					{blogForm()}
 
-			{blogs.map((blog) => (
-				<Blog key={blog.id} blog={blog} />
-			))}
+					<h2>Blogs</h2>
+					{blogs.map((blog) => (
+						<Blog key={blog.id} blog={blog} />
+					))}
+				</div>
+			)}
 		</div>
 	);
 };
