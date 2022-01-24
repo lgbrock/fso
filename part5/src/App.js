@@ -1,6 +1,7 @@
 // Quick update
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -10,6 +11,7 @@ const App = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [user, setUser] = useState(null);
+	const [message, setMessage] = useState(null);
 
 	useEffect(() => {
 		blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -24,19 +26,7 @@ const App = () => {
 		}
 	}, []);
 
-	const addBlog = (event) => {
-		event.preventDefault();
-		const blogObject = {
-			title: newBlog,
-			author: '',
-			url: '',
-		};
-		blogService.create(blogObject).then((returnedBlog) => {
-			setBlogs(blogs.concat(returnedBlog));
-			setNewBlog('');
-		});
-	};
-
+	// LOGIN
 	const handleLogin = async (event) => {
 		event.preventDefault();
 
@@ -51,7 +41,10 @@ const App = () => {
 			setUsername('');
 			setPassword('');
 		} catch (exception) {
-			console.log(exception);
+			setMessage('Wrong credentials');
+			setTimeout(() => {
+				setMessage(null);
+			}, 5000);
 		}
 	};
 
@@ -79,6 +72,20 @@ const App = () => {
 			<button type='submit'>login</button>
 		</form>
 	);
+
+	// BLOG FORM
+	const addBlog = (event) => {
+		event.preventDefault();
+		const blogObject = {
+			title: newBlog,
+			author: '',
+			url: '',
+		};
+		blogService.create(blogObject).then((returnedBlog) => {
+			setBlogs(blogs.concat(returnedBlog));
+			setNewBlog('');
+		});
+	};
 
 	const blogForm = () => (
 		<form onSubmit={addBlog}>
@@ -114,17 +121,10 @@ const App = () => {
 
 	return (
 		<div>
-			{user === null ? (
-				loginForm()
-			) : (
-				<div>
-					<p>{user.name} logged in</p>
-					<button onClick={() => setUser(null)}>logout</button>
-					{blogForm()}
-				</div>
-			)}
-
-			<h2>blogs</h2>
+			<h1>Blog app</h1>
+			<Notification message={message} />
+			{user === null ? loginForm() : <p>{user.name} logged in</p>}
+			{user === null ? null : blogForm()}
 			{blogs.map((blog) => (
 				<Blog key={blog.id} blog={blog} />
 			))}

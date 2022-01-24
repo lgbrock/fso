@@ -12,17 +12,17 @@ const getAll = () => {
 	return request.then((response) => response.data);
 };
 
-const create = async (newObject) => {
+const create = async (newBlog) => {
 	const config = {
 		headers: { Authorization: token },
 	};
 
-	const response = await axios.post(baseUrl, newObject, config);
+	const response = await axios.post(baseUrl, newBlog, config);
 	return response.data;
 };
 
-const update = (id, newObject) => {
-	const request = axios.put(`${baseUrl}/${id}`, newObject);
+const update = (id, newBlog) => {
+	const request = axios.put(`${baseUrl}/${id}`, newBlog);
 	return request.then((response) => response.data);
 };
 
