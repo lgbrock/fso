@@ -12,6 +12,7 @@ const App = () => {
 	const [newBlog, setNewBlog] = useState('');
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+
 	const [user, setUser] = useState(null);
 	const [message, setMessage] = useState(null);
 
@@ -84,7 +85,8 @@ const App = () => {
 	};
 
 	// BLOG FORM
-	const addBlog = async (blogObject) => {
+
+	const addBlog = (blogObject) => {
 		blogFormRef.current.toggleVisibility();
 		blogService.create(blogObject).then((returnedBlog) => {
 			setBlogs(blogs.concat(returnedBlog));
@@ -94,7 +96,7 @@ const App = () => {
 
 	const blogForm = () => (
 		<Togglable buttonLabel='create new blog' ref={blogFormRef}>
-			<BlogForm addBlog={addBlog} />
+			<BlogForm createBlog={addBlog} />
 		</Togglable>
 	);
 
