@@ -30,6 +30,8 @@ const App = () => {
 			const user = JSON.parse(loggedUserJSON);
 			setUser(user);
 			blogService.setToken(user.token);
+
+			getBlogs();
 		}
 	}, []);
 
@@ -90,9 +92,7 @@ const App = () => {
 
 	const getBlogs = async () => {
 		const blogs = await blogService.getAll();
-		blogs.sort((a, b) => a.likes > b.likes)
-			? setBlogs(blogs)
-			: setBlogs(blogs.reverse());
+		blogs.sort((a, b) => (a.likes > b.likes ? -1 : 1));
 		setBlogs(blogs);
 	};
 
@@ -105,9 +105,11 @@ const App = () => {
 			setSuccessMessage(
 				`a new blog ${createdBlog.title} by ${createdBlog.author} added`
 			);
+			setBlogs(blogs.concat(createdBlog));
+			setErrorMessage(null);
 			setTimeout(() => {
 				setSuccessMessage(null);
-			}, 5000);
+			});
 		});
 	};
 
@@ -156,7 +158,6 @@ const App = () => {
 							blog={blog}
 							updateBlog={updateBlog}
 							deleteBlog={deleteBlog}
-							user={user}
 						/>
 					))}
 				</div>
