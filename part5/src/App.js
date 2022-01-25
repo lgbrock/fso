@@ -123,7 +123,6 @@ const App = () => {
 
 	const deleteBlog = async (id) => {
 		const deletedBlog = await blogService.deleteBlog(id);
-		setBlogs(blogs.filter((blog) => blog.id !== id));
 		setSuccessMessage(`blog ${deletedBlog.title} deleted`);
 		setTimeout(() => {
 			setSuccessMessage(null);

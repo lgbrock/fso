@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import blogService from '../services/blogs';
 
 const Blog = ({ blog }) => {
 	const [blogObject, setBlogObject] = useState(blog);
@@ -19,12 +20,14 @@ const Blog = ({ blog }) => {
 		setBlogObject(updatedBlog);
 	};
 
-	const removeBlog = () => {
-		const updatedBlog = {
-			...blogObject,
-			deleted: true,
-		};
-		setBlogObject(updatedBlog);
+	const removeBlog = async () => {
+		if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+			await blogService.remove(blog.id);
+
+			let blogs = await blogService.getAll();
+			blogs.sort((a, b) => b.likes - a.likes);
+			setBlogObject(blogs);
+		}
 	};
 
 	const blogStyle = {
@@ -44,12 +47,11 @@ const Blog = ({ blog }) => {
 				</p>
 			</div>
 			<div style={showWhenVisible}>
-				<p>{blog.title}</p>
 				<p>{blog.url}</p>
 				<p>
 					likes {blogObject.likes} <button onClick={increaseLikes}>like</button>
 				</p>
-				<p>{blog.author}</p>
+
 				<button onClick={removeBlog}>remove</button>
 			</div>
 		</div>
