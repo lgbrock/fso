@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Note from './components/Note';
 import Notification from './components/Notification';
 import Footer from './components/Footer';
+import LoginForm from './components/LoginForm';
+import NoteForm from './components/NoteForm';
+import Togglable from './components/Togglable';
 import noteService from './services/notes';
 import loginService from './services/login';
 import './index.css';
@@ -9,11 +12,13 @@ import './index.css';
 const App = () => {
 	const [notes, setNotes] = useState([]);
 	const [newNote, setNewNote] = useState('');
-	// Shows all added notes
 	const [showAll, setShowAll] = useState(false);
 	const [errorMessage, setErrorMessage] = useState(null);
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
+	const [loginVisible, setLoginVisible] = useState(false);
+
+	const [username, setUsername] = useState('logan');
+	const [password, setPassword] = useState('123456');
+
 	const [user, setUser] = useState(null);
 
 	useEffect(() => {
@@ -30,20 +35,6 @@ const App = () => {
 			noteService.setToken(user.token);
 		}
 	}, []);
-
-	const addNote = (event) => {
-		event.preventDefault();
-		const noteObject = {
-			content: newNote,
-			date: new Date().toISOString(),
-			// 50% chance of being important
-			important: Math.random() < 0.5,
-		};
-		noteService.create(noteObject).then((returnedNote) => {
-			setNotes(notes.concat(returnedNote));
-			setNewNote('');
-		});
-	};
 
 	const toggleImportanceOf = (id) => {
 		const note = notes.find((n) => n.id === id);
@@ -65,10 +56,15 @@ const App = () => {
 			});
 	};
 
-	const handleNoteChange = (event) => {
-		console.log(event.target.value);
-		setNewNote(event.target.value);
+	const addNote = (noteObject) => {
+		noteService.create(noteObject).then((returnedNote) => {
+			setNotes(notes.concat(returnedNote));
+			setNewNote('');
+		});
 	};
+
+	// Show only the important notes
+	const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
 	const handleLogin = async (event) => {
 		event.preventDefault();
@@ -92,72 +88,53 @@ const App = () => {
 	};
 
 	const loginForm = () => (
-		<form onSubmit={handleLogin}>
-			<div>
-				username
-				<input
-					type='text'
-					value={username}
-					name='Username'
-					onChange={({ target }) => setUsername(target.value)}
-				/>
-			</div>
-			<div>
-				password
-				<input
-					type='password'
-					value={password}
-					name='Password'
-					onChange={({ target }) => setPassword(target.value)}
-				/>
-			</div>
-			<button type='submit'>login</button>
-		</form>
+		<Togglable buttonLabel='log in'>
+			<LoginForm
+				username={username}
+				password={password}
+				handleUsernameChange={({ target }) => setUsername(target.value)}
+				handlePasswordChange={({ target }) => setPassword(target.value)}
+				handleSubmit={handleLogin}
+			/>
+		</Togglable>
 	);
 
 	const noteForm = () => (
-		<form onSubmit={addNote}>
-			<input value={newNote} onChange={handleNoteChange} />
-			<button type='submit'>save</button>
-		</form>
+		<Togglable buttonLabel='new note'>
+			<NoteForm createNote={addNote} />
+		</Togglable>
 	);
-
-	// Show only the important notes
-	const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
 	return (
 		<div>
-			<div>
-				<h1>Notes</h1>
+			<h1>Notes</h1>
+			<Notification message={errorMessage} />
 
-				<Notification message={errorMessage} />
-
-				{user === null ? (
-					loginForm()
-				) : (
-					<div>
-						<p>{user.name} logged-in</p>
-						{noteForm()}
-					</div>
-				)}
-
+			{user === null ? (
+				loginForm()
+			) : (
 				<div>
-					<button onClick={() => setShowAll(!showAll)}>
-						show {showAll ? 'important' : 'all'}
-					</button>
+					<p>{user.name} logged in</p>
+					{noteForm()}
 				</div>
-				<ul>
-					{notesToShow.map((note, i) => (
-						<Note
-							key={i}
-							note={note}
-							toggleImportance={() => toggleImportanceOf(note.id)}
-						/>
-					))}
-				</ul>
+			)}
 
-				<Footer />
+			<div>
+				<button onClick={() => setShowAll(!showAll)}>
+					show {showAll ? 'important' : 'all'}
+				</button>
 			</div>
+			<ul>
+				{notesToShow.map((note) => (
+					<Note
+						key={note.id}
+						note={note}
+						toggleImportance={() => toggleImportanceOf(note.id)}
+					/>
+				))}
+			</ul>
+
+			<Footer />
 		</div>
 	);
 };
