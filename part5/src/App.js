@@ -13,8 +13,10 @@ const App = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
+	const [successMessage, setSuccessMessage] = useState(null);
+	const [errorMessage, setErrorMessage] = useState(null);
+
 	const [user, setUser] = useState(null);
-	const [message, setMessage] = useState(null);
 
 	const blogFormRef = useRef();
 
@@ -46,9 +48,9 @@ const App = () => {
 			setUsername('');
 			setPassword('');
 		} catch (exception) {
-			setMessage('Wrong credentials');
+			setErrorMessage('Wrong credentials');
 			setTimeout(() => {
-				setMessage(null);
+				setErrorMessage(null);
 			}, 5000);
 		}
 	};
@@ -86,12 +88,44 @@ const App = () => {
 
 	// BLOG FORM
 
-	const addBlog = (blogObject) => {
+	const getBlogs = async () => {
+		const blogs = await blogService.getAll();
+		blogs.sort((a, b) => a.likes > b.likes)
+			? setBlogs(blogs)
+			: setBlogs(blogs.reverse());
+		setBlogs(blogs);
+	};
+
+	const addBlog = async (blogObject) => {
 		blogFormRef.current.toggleVisibility();
-		blogService.create(blogObject).then((returnedBlog) => {
-			setBlogs(blogs.concat(returnedBlog));
-			setNewBlog('');
+		const createdBlog = await blogService.create(blogObject);
+		setBlogs(blogs.concat(createdBlog));
+		setErrorMessage(null);
+		setTimeout(() => {
+			setSuccessMessage(
+				`a new blog ${createdBlog.title} by ${createdBlog.author} added`
+			);
+			setTimeout(() => {
+				setSuccessMessage(null);
+			}, 5000);
 		});
+	};
+
+	const updateBlog = async (id, blogObject) => {
+		const updatedBlog = await blogService.update(id, blogObject);
+		setSuccessMessage(`blog ${updatedBlog.title} updated`);
+		setTimeout(() => {
+			setSuccessMessage(null);
+		}, 5000);
+	};
+
+	const deleteBlog = async (id) => {
+		const deletedBlog = await blogService.deleteBlog(id);
+		setBlogs(blogs.filter((blog) => blog.id !== id));
+		setSuccessMessage(`blog ${deletedBlog.title} deleted`);
+		setTimeout(() => {
+			setSuccessMessage(null);
+		}, 5000);
 	};
 
 	const blogForm = () => (
@@ -103,7 +137,8 @@ const App = () => {
 	return (
 		<div>
 			<h1>Blog app</h1>
-			<Notification message={message} />
+			<Notification message={successMessage} type='success' />
+			<Notification message={errorMessage} type='error' />
 			{user === null ? (
 				loginForm()
 			) : (
@@ -116,7 +151,13 @@ const App = () => {
 
 					<h2>Blogs</h2>
 					{blogs.map((blog) => (
-						<Blog key={blog.id} blog={blog} />
+						<Blog
+							key={blog.id}
+							blog={blog}
+							updateBlog={updateBlog}
+							deleteBlog={deleteBlog}
+							user={user}
+						/>
 					))}
 				</div>
 			)}
