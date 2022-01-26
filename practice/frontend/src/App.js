@@ -16,8 +16,8 @@ const App = () => {
 	const [errorMessage, setErrorMessage] = useState(null);
 	// const [loginVisible, setLoginVisible] = useState(false);
 
-	const [username, setUsername] = useState('logan');
-	const [password, setPassword] = useState('123456');
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
 
 	const [user, setUser] = useState(null);
 
