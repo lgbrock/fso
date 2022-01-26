@@ -64,5 +64,22 @@ describe('Blog app', function () {
 			cy.get('#like-button').click();
 			cy.contains('1');
 		});
+		it.only('user can delete a blog', function () {
+			cy.contains('create new blog').click();
+			cy.get('#title').type('First class tests');
+			cy.get('#author').type('Edsger W. Dijkstra');
+			cy.get('#url').type(
+				'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html'
+			);
+			cy.get('#create-blog').click();
+
+			cy.contains('First class tests - Edsger W. Dijkstra').click();
+			cy.contains('view').click();
+			cy.contains('remove').click();
+			cy.get('#url').should(
+				'not.contain',
+				'First class tests - Edsger W. Dijkstra'
+			);
+		});
 	});
 });

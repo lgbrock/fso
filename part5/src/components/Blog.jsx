@@ -55,7 +55,9 @@ const Blog = ({ blog }) => {
 					</button>
 				</p>
 
-				<button onClick={removeBlog}>remove</button>
+				<button id='remove-blog' onClick={removeBlog}>
+					remove
+				</button>
 			</div>
 		</div>
 	);
