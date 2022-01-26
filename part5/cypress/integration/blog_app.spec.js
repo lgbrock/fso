@@ -15,4 +15,22 @@ describe('Blog app', function () {
 		cy.contains('password');
 		cy.contains('login');
 	});
+
+	describe('Login', function () {
+		it('succeeds with correct credentials', function () {
+			cy.contains('login');
+			cy.get(':nth-child(2) > input').type('lgbrock');
+			cy.get(':nth-child(3) > input').type('123456');
+			cy.get('button').click();
+			cy.contains('Logan Brock logged in');
+		});
+
+		it('fails with wrong credentials', function () {
+			cy.contains('login');
+			cy.get(':nth-child(2) > input').type('lgbrock');
+			cy.get(':nth-child(3) > input').type('wrong');
+			cy.get('button').click();
+			cy.get('.error').contains('wrong credentials');
+		});
+	});
 });
