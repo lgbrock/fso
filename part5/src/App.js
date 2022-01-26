@@ -138,8 +138,10 @@ const App = () => {
 	return (
 		<div>
 			<h1>Blog app</h1>
-			<Notification message={successMessage} type='success' />
-			<Notification message={errorMessage} type='error' />
+			<Notification
+				errorMessage={errorMessage}
+				successMessage={successMessage}
+			/>
 			{user === null ? (
 				loginForm()
 			) : (

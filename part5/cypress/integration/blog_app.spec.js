@@ -30,7 +30,24 @@ describe('Blog app', function () {
 			cy.get(':nth-child(2) > input').type('lgbrock');
 			cy.get(':nth-child(3) > input').type('wrong');
 			cy.get('button').click();
-			cy.get('.error').contains('wrong credentials');
+			cy.get('html').should('not.contain', 'Logan Brock logged in');
+		});
+	});
+	describe('when logged in', function () {
+		beforeEach(function () {
+			cy.login({ username: 'lgbrock', password: '123456' });
+		});
+
+		it('a new blog can be created', function () {
+			cy.contains('create new blog').click();
+			cy.get('#title').type('First class tests');
+			cy.get('#author').type('Edsger W. Dijkstra');
+			cy.get('#url').type(
+				'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html'
+			);
+			cy.get('#create-blog').click();
+
+			cy.contains('First class tests - Edsger W. Dijkstra');
 		});
 	});
 });

@@ -21,13 +21,21 @@ const success = {
 };
 
 const Notification = ({ successMessage, errorMessage }) => {
-	if (successMessage) {
-		return <div style={success}>{successMessage}</div>;
+	if (successMessage === null && errorMessage === null) {
+		return null;
+	} else if (successMessage) {
+		return (
+			<div id='success' style={success}>
+				{successMessage}
+			</div>
+		);
+	} else {
+		return (
+			<div id='error' style={error}>
+				{errorMessage}
+			</div>
+		);
 	}
-	if (errorMessage) {
-		return <div style={error}>{errorMessage}</div>;
-	}
-	return null;
 };
 
 export default Notification;
