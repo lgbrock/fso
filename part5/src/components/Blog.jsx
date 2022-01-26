@@ -49,7 +49,10 @@ const Blog = ({ blog }) => {
 			<div style={showWhenVisible}>
 				<p>{blog.url}</p>
 				<p>
-					likes {blogObject.likes} <button onClick={increaseLikes}>like</button>
+					likes {blogObject.likes}{' '}
+					<button id='like-button' onClick={increaseLikes}>
+						like
+					</button>
 				</p>
 
 				<button onClick={removeBlog}>remove</button>
