@@ -39,7 +39,7 @@ const Blog = ({ blog }) => {
 	};
 
 	return (
-		<div style={blogStyle}>
+		<div style={blogStyle} className='blog'>
 			<div>
 				<p>
 					{blog.title} - {blog.author}{' '}
