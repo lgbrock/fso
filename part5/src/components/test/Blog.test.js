@@ -1,16 +1,37 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import Blog from '../Blog';
 
-test('renders content', () => {
-	const blog = {
-		title: 'Test title',
-		author: 'Test author',
-	};
+describe('When a blog is created', () => {
+	test('the title and author are rendered', () => {
+		const blog = {
+			title: 'Test title',
+			author: 'Test author',
+		};
 
-	const component = render(<Blog blog={blog} />);
+		const component = render(<Blog blog={blog} />);
 
-	expect(component.container).toHaveTextContent('Test title');
-	expect(component.container).toHaveTextContent('Test author');
+		expect(component.container).toHaveTextContent('Test title');
+		expect(component.container).toHaveTextContent('Test author');
+	});
+
+	test('the url and number of likes is shown once the event handler is clicked', () => {
+		const blog = {
+			title: 'Test title',
+			author: 'Test author',
+			url: 'www.test.com',
+			likes: 5,
+		};
+
+		const mockHandler = jest.fn();
+
+		const component = render(<Blog blog={blog} onClick={mockHandler} />);
+
+		const button = component.getByText('view');
+		fireEvent.click(button);
+
+		expect(component.container).toHaveTextContent('www.test.com');
+		expect(component.container).toHaveTextContent('5');
+	});
 });

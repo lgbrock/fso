@@ -1,6 +1,7 @@
 * {
-	margin: 0;
-	padding: 2px;
+	box-sizing: border-box;
+	margin: 3px;
+	font-family: 'Raleway', sans-serif;
 }
 .success {
 	color: green;
