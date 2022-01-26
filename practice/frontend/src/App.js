@@ -11,10 +11,10 @@ import './index.css';
 
 const App = () => {
 	const [notes, setNotes] = useState([]);
-	const [newNote, setNewNote] = useState('');
+	const [setNewNote] = useState('');
 	const [showAll, setShowAll] = useState(false);
 	const [errorMessage, setErrorMessage] = useState(null);
-	const [loginVisible, setLoginVisible] = useState(false);
+	// const [loginVisible, setLoginVisible] = useState(false);
 
 	const [username, setUsername] = useState('logan');
 	const [password, setPassword] = useState('123456');
@@ -47,7 +47,7 @@ const App = () => {
 			.then((returnedNote) => {
 				setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
 			})
-			.catch((error) => {
+			.catch(() => {
 				setErrorMessage(
 					`Note '${note.content}' was already removed from the server`
 				);
