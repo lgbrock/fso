@@ -11,7 +11,6 @@ import './index.css';
 
 const App = () => {
 	const [notes, setNotes] = useState([]);
-	const [setNewNote] = useState('');
 	const [showAll, setShowAll] = useState(false);
 	const [errorMessage, setErrorMessage] = useState(null);
 	// const [loginVisible, setLoginVisible] = useState(false);
@@ -54,7 +53,6 @@ const App = () => {
 				setTimeout(() => {
 					setErrorMessage(null);
 				}, 5000);
-				setNotes(notes.filter((n) => n.id !== id));
 			});
 	};
 
@@ -62,7 +60,6 @@ const App = () => {
 		noteFormRef.current.toggleVisibility();
 		noteService.create(noteObject).then((returnedNote) => {
 			setNotes(notes.concat(returnedNote));
-			setNewNote('');
 		});
 	};
 

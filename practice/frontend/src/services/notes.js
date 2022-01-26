@@ -1,6 +1,5 @@
 import axios from 'axios';
 const baseUrl = '/api/notes';
-
 let token = null;
 
 const setToken = (newToken) => {
