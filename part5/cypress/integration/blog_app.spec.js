@@ -128,9 +128,9 @@ describe('Blog app', function () {
 			cy.wait(500);
 
 			cy.get('.blog').then((blogs) => {
-				expect(blogs[0]).to.contain('test3');
-				expect(blogs[1]).to.contain('test2');
-				expect(blogs[2]).to.contain('test1');
+				cy.wrap(blogs[0]).contains('likes 3');
+				cy.wrap(blogs[1]).contains('likes 2');
+				cy.wrap(blogs[2]).contains('likes 1');
 			});
 		});
 	});
