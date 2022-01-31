@@ -6,15 +6,15 @@ module.exports = {
 		'jest/globals': true,
 		'cypress/globals': true,
 	},
-	// extends: ['eslint:recommended', 'plugin:react/recommended'],
-	// parserOptions: {
-	// 	ecmaFeatures: {
-	// 		jsx: true,
-	// 	},
-	// 	ecmaVersion: 2018,
-	// 	sourceType: 'module',
-	// },
-	// plugins: ['react', 'jest', 'cypress'],
+	extends: ['eslint:recommended', 'plugin:react/recommended'],
+	parserOptions: {
+		ecmaFeatures: {
+			jsx: true,
+		},
+		ecmaVersion: 2018,
+		sourceType: 'module',
+	},
+	plugins: ['react', 'jest', 'cypress'],
 	// rules: {
 	// 	'no-unused-vars': [
 	// 		'error',
