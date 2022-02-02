@@ -9,16 +9,18 @@ const App = () => {
 	const anecdotes = useSelector((state) => state);
 	const dispatch = useDispatch();
 
+  // POST /anecdotes/votes +1
 	const vote = (id) => {
 		dispatch(createVoteAction(id));
 	};
 
+	// POST: /anecdotes/new
 	const create = (event) => {
 		event.preventDefault();
 		dispatch(createNewAnecdoteAction(event.target.anecdote.value));
 	};
 
-	// order anecdotes by votes
+	// Order anecdotes by votes
 	const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes);
 
 	return (
