@@ -1,23 +1,15 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-	createVoteAction,
-	createNewAnecdoteAction,
-} from './reducers/anecdoteReducer';
+import { createVoteAction } from './reducers/anecdoteReducer';
+import AnecdoteForm from './components/AnecdoteForm';
 
 const App = () => {
 	const anecdotes = useSelector((state) => state);
 	const dispatch = useDispatch();
 
-  // POST /anecdotes/votes +1
+	// POST /anecdotes/votes +1
 	const vote = (id) => {
 		dispatch(createVoteAction(id));
-	};
-
-	// POST: /anecdotes/new
-	const create = (event) => {
-		event.preventDefault();
-		dispatch(createNewAnecdoteAction(event.target.anecdote.value));
 	};
 
 	// Order anecdotes by votes
@@ -35,13 +27,7 @@ const App = () => {
 					</div>
 				</div>
 			))}
-			<h2>create new</h2>
-			<form onSubmit={create}>
-				<div>
-					<input name='anecdote' />
-				</div>
-				<button type='submit'>create</button>
-			</form>
+			<AnecdoteForm />
 		</div>
 	);
 };
