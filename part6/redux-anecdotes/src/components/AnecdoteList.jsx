@@ -7,8 +7,16 @@ import {
 } from '../reducers/notificationReducer';
 
 const AnecdoteList = () => {
-	const anecdotes = useSelector((state) => state.anecdotes);
 	const dispatch = useDispatch();
+
+	// get anecdotes from store, filter them, and sort by number of votes
+	const anecdotes = useSelector((state) =>
+		state.anecdotes
+			.filter((anecdote) =>
+				anecdote.content.toLowerCase().includes(state.filter)
+			)
+			.sort((a, b) => b.votes - a.votes)
+	);
 
 	// POST /anecdotes/votes +1
 	const vote = (anecdote) => {
