@@ -22,7 +22,7 @@ const asObject = (anecdote) => {
 // Holds the initial app state (anecdote fixtures mapped to objects)
 const initialState = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
+const anecdoteReducer = (state = initialState, action) => {
 	// Upvote an anecdote
 	switch (action.type) {
 		case 'VOTE':
@@ -57,4 +57,4 @@ export const createNewAnecdoteAction = (content) => ({
 	},
 });
 
-export default reducer;
+export default anecdoteReducer;
