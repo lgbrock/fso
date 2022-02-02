@@ -1,4 +1,4 @@
-const defaultMessage = 'Notification Message';
+const defaultMessage = null;
 
 const notificationReducer = (state = defaultMessage, action) => {
 	switch (action.type) {
@@ -16,6 +16,13 @@ export const createShowNotificationAction = (notification) => {
 	return {
 		type: 'SET_NOTIFICATION',
 		notification,
+	};
+};
+
+// Action creator function for clearing the current notification after 5 seconds
+export const createClearNotificationAction = () => {
+	return {
+		type: 'CLEAR_NOTIFICATION',
 	};
 };
 
