@@ -15,3 +15,13 @@ const counterReducer = (state = 0, action) => {
 };
 
 const store = createStore(counterReducer);
+store.subscribe(() => {
+	const storeNow = store.getState();
+	console.log(storeNow);
+});
+
+store.dispatch({ type: 'INCREMENT' });
+store.dispatch({ type: 'INCREMENT' });
+store.dispatch({ type: 'INCREMENT' });
+store.dispatch({ type: 'ZERO' });
+store.dispatch({ type: 'DECREMENT' });
