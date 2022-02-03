@@ -26,4 +26,14 @@ export const createClearNotificationAction = () => {
 	};
 };
 
+// Action creator function for displaying notification message
+export const createNotificationAction = (message, timeout = 5000) => {
+	return async (dispatch) => {
+		dispatch(createShowNotificationAction(message));
+		setTimeout(() => {
+			dispatch(createClearNotificationAction());
+		}, timeout);
+	};
+};
+
 export default notificationReducer;
