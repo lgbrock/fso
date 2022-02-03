@@ -1,4 +1,5 @@
 import React from 'react';
+import anecdoteService from '../services/anecdotes';
 import { useDispatch } from 'react-redux';
 import { createNewAnecdoteAction } from '../reducers/anecdoteReducer';
 import {
@@ -10,21 +11,24 @@ const AnecdoteForm = () => {
 	const dispatch = useDispatch();
 
 	// POST: /anecdotes/new
-	const create = (event) => {
+	const newAnecdote = async (event) => {
 		event.preventDefault();
-		dispatch(createNewAnecdoteAction(event.target.anecdote.value));
-		dispatch(createShowNotificationAction('Anecdote created!', 5));
+		const content = event.target.anecdote.value;
 		event.target.anecdote.value = '';
-
-		setTimeout(() => {
-			dispatch(createClearNotificationAction());
-		}, 5000);
+		const newAnecdote = await anecdoteService.createNew(content);
+		dispatch(createNewAnecdoteAction(newAnecdote));
+		dispatch(
+			createShowNotificationAction(
+				`Anecdote '${newAnecdote.content}' added!`,
+				5000
+			)
+		);
 	};
 
 	return (
 		<div>
 			<h2>create new</h2>
-			<form onSubmit={create}>
+			<form onSubmit={newAnecdote}>
 				<div>
 					<input name='anecdote' />
 				</div>
