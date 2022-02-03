@@ -43,9 +43,14 @@ export const createVoteAction = (id) => ({
 });
 
 // Action creator function for creating a new anecdote
-export const createNewAnecdoteAction = (anecdote) => ({
-	type: 'NEW',
-	data: anecdote,
-});
+export const createNewAnecdoteAction = (content) => {
+	return async (dispatch) => {
+		const newAnecdote = await anecdoteService.createNew(content);
+		dispatch({
+			type: 'NEW',
+			data: newAnecdote,
+		});
+	};
+};
 
 export default anecdoteReducer;
