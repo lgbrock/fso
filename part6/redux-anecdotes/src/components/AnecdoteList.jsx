@@ -20,7 +20,7 @@ const AnecdoteList = () => {
 
 	// POST /anecdotes/votes +1
 	const vote = (anecdote) => {
-		dispatch(createVoteAction(anecdote.id));
+		dispatch(createVoteAction(anecdote));
 		dispatch(
 			createShowNotificationAction(`Voted for anecdote "${anecdote.content}"`)
 		);
