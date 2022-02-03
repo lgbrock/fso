@@ -12,15 +12,13 @@ const AnecdoteList = () => {
 	// get anecdotes from store, filter them, and sort by number of votes
 	const anecdotes = useSelector((state) =>
 		state.anecdotes
-			.filter((anecdote) =>
-				anecdote.content.toLowerCase().includes(state.filter)
-			)
+			.filter((anecdote) => anecdote.content.length > 0)
 			.sort((a, b) => b.votes - a.votes)
 	);
 
 	// POST /anecdotes/votes +1
 	const vote = (anecdote) => {
-		dispatch(createVoteAction(anecdote.id));
+		dispatch(createVoteAction(anecdote));
 		dispatch(
 			createShowNotificationAction(`Voted for anecdote "${anecdote.content}"`)
 		);
