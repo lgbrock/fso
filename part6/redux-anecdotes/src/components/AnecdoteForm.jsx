@@ -13,11 +13,12 @@ const AnecdoteForm = () => {
 	const newAnecdote = async (event) => {
 		event.preventDefault();
 		const content = event.target.anecdote.value;
+		event.target.anecdote.value = '';
+
 		dispatch(createNewAnecdoteAction(content));
-		dispatch(createShowNotificationAction(`Created new anecdote "${content}"`));
-		setTimeout(() => {
-			dispatch(createClearNotificationAction());
-		}, 5000);
+		dispatch(
+			createShowNotificationAction(`A new anecdote ${content} created!`, 5000)
+		);
 	};
 
 	return (
