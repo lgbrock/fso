@@ -1,14 +1,4 @@
-// Generate random ID
-// const getId = () => (100000 * Math.random()).toFixed(0);
-
-// Turn an anecdote string into an object with ID and votes
-// const asObject = (anecdote) => {
-// 	return {
-// 		content: anecdote,
-// 		id: getId(),
-// 		votes: 0,
-// 	};
-// };
+import anecdoteService from '../services/anecdotes';
 
 const anecdoteReducer = (state = [], action) => {
 	// Upvote an anecdote
@@ -34,10 +24,15 @@ const anecdoteReducer = (state = [], action) => {
 };
 
 // Action creator function for initializing anecdote list
-export const createInitAction = (anecdotes) => ({
-	type: 'INIT',
-	data: anecdotes,
-});
+export const createInitAction = () => {
+	return async (dispatch) => {
+		const anecdotes = await anecdoteService.getAll();
+		dispatch({
+			type: 'INIT',
+			data: anecdotes,
+		});
+	};
+};
 
 // Action creator function for upvoting an anecdote
 export const createVoteAction = (id) => ({

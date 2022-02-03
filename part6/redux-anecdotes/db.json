@@ -44,6 +44,11 @@
       "content": "Create new anecdote with quotes",
       "votes": 0,
       "id": "2Fkcl8l"
+    },
+    {
+      "content": "Creating a new anecdote with Redux Thunk",
+      "votes": 0,
+      "id": "Ewba4St"
     }
   ]
 }
