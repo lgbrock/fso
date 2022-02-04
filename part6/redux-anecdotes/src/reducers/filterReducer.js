@@ -13,7 +13,7 @@ const filterReducer = (state = defaultFilter, action) => {
 export const createSetFilterAction = (filter) => {
 	return {
 		type: 'SET_FILTER',
-		filter: filter,
+		filter,
 	};
 };
 
