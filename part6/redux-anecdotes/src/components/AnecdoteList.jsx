@@ -1,32 +1,18 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { createVoteAction } from '../reducers/anecdoteReducer';
 import { createNotificationAction } from '../reducers/notificationReducer';
 
-const AnecdoteList = () => {
-	const dispatch = useDispatch();
-
-	// get anecdotes from store, filter them, and sort by number of votes
-	const anecdotes = useSelector((state) =>
-		state.anecdotes
-			.filter((anecdote) => anecdote.content.length > 0)
-			.sort((a, b) => b.votes - a.votes)
-	);
-
+const AnecdoteList = (props) => {
 	// POST /anecdotes/votes +1
 	const vote = (anecdote) => {
-		dispatch(createVoteAction(anecdote));
-		dispatch(
-			createNotificationAction(`You voted for "${anecdote.content}"`, 5000)
-		);
+		props.createVoteAction(anecdote);
+		props.createNotificationAction(`You voted: '${anecdote.content}'`, 5);
 	};
-
-	// Order anecdotes by votes
-	const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes);
 
 	return (
 		<div>
-			{sortedAnecdotes.map((anecdote) => (
+			{props.anecdotes.map((anecdote) => (
 				<div key={anecdote.id}>
 					<div>{anecdote.content}</div>
 					<div>
@@ -39,4 +25,19 @@ const AnecdoteList = () => {
 	);
 };
 
-export default AnecdoteList;
+// Get anecdotes from state, filter them, and sort them by number of votes
+const mapStateToProps = (state) => {
+	return {
+		anecdotes: state.anecdotes
+			.filter((anecdote) => anecdote.content.includes(state.filter))
+			.sort((a, b) => b.votes - a.votes),
+	};
+};
+
+// Action Creators
+const mapDispatchToProps = {
+	createNotificationAction,
+	createVoteAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList);
