@@ -1,11 +1,34 @@
-const defaultMessage = null;
+// Notification Fixture Data
+const defaultNotificationObject = {
+	notification: null,
+	timeoutID: null,
+};
 
-const notificationReducer = (state = defaultMessage, action) => {
+const notificationReducer = (state = defaultNotificationObject, action) => {
 	switch (action.type) {
-		case 'SET_NOTIFICATION':
-			return action.notification;
+		// Set the timeout ID so it can be cleared later.
+		case 'SET_TIMEOUT_ID':
+			return {
+				notification: state.notification,
+				timeoutID: action.data,
+			};
+
+		// Display a new notification
+		case 'SHOW_NOTIFICATION':
+			if (state.timeoutID) {
+				clearTimeout(state.timeoutID);
+			}
+			return {
+				notification: action.data,
+				timeoutID: null,
+			};
+
+		// Hide an existing notification
 		case 'CLEAR_NOTIFICATION':
-			return '';
+			return {
+				notification: null,
+				timeoutID: null,
+			};
 		default:
 			return state;
 	}
@@ -30,10 +53,16 @@ export const createClearNotificationAction = () => {
 export const createNotificationAction = (message, timeout = 5000) => {
 	return async (dispatch) => {
 		dispatch(createShowNotificationAction(message));
-		setTimeout(() => {
+		const timeoutID = setTimeout(() => {
 			dispatch(createClearNotificationAction());
 		}, timeout);
+		dispatch(createSetTimeoutAction(timeoutID));
 	};
 };
+
+export const createSetTimeoutAction = (timeoutID) => ({
+	type: 'SET_TIMEOUT_ID',
+	data: timeoutID,
+});
 
 export default notificationReducer;
