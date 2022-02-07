@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Switch, Route, Link, useParams } from 'react-router-dom';
+import { Switch, Route, Link, useParams, useHistory } from 'react-router-dom';
 
 const Menu = () => {
 	const padding = {
@@ -98,6 +98,7 @@ const CreateNew = (props) => {
 	const [content, setContent] = useState('');
 	const [author, setAuthor] = useState('');
 	const [info, setInfo] = useState('');
+	const history = useHistory();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -107,6 +108,9 @@ const CreateNew = (props) => {
 			info,
 			votes: 0,
 		});
+
+		props.showNotification(`a new anecdote '${content}' created!`);
+		history.push('/');
 	};
 
 	return (
@@ -185,16 +189,24 @@ const App = () => {
 		setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
 	};
 
+	const showNotification = (content) => {
+		setNotification(content);
+		setTimeout(() => {
+			setNotification('');
+		}, 10000);
+	};
+
 	return (
 		<div style={padding}>
 			<h1>Software anecdotes</h1>
 			<Menu />
+			<p>{notification}</p>
 			<Switch>
 				<Route path='/about'>
 					<About />
 				</Route>
 				<Route path='/create'>
-					<CreateNew addNew={addNew} />
+					<CreateNew addNew={addNew} showNotification={showNotification} />
 				</Route>
 				<Route path='/anecdotes/:id'>
 					<Anecdote anecdotes={anecdotes} />
