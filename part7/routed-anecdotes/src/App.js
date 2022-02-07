@@ -20,15 +20,24 @@ const Menu = () => {
 	);
 };
 
-const Anecdote = ({ anecdote }) => (
-	<div>
-		<h2>{anecdote.content}</h2>
-		<p>has {anecdote.votes} votes</p>
-		<p>
-			for more info see <a href={anecdote.info}>{anecdote.info}</a>
-		</p>
-	</div>
-);
+const Anecdote = ({ anecdotes }) => {
+	const { id } = useParams();
+	const anecdote = anecdotes.find((anecdote) => anecdote.id === id);
+	return (
+		<div>
+			<h2>
+				'{anecdote.content}' by {anecdote.author}
+			</h2>
+			<p>
+				has {anecdote.votes} votes
+				<button onClick={() => anecdote.vote()}>vote</button>
+			</p>
+			<p>
+				for more info see <a href={anecdote.info}>{anecdote.info}</a>
+			</p>
+		</div>
+	);
+};
 
 const AnecdoteList = ({ anecdotes }) => (
 	<div>
@@ -36,7 +45,7 @@ const AnecdoteList = ({ anecdotes }) => (
 		<ul>
 			{anecdotes.map((anecdote) => (
 				<li key={anecdote.id}>
-					<Link to={`/anecdote/${anecdote.id}`}>{anecdote.content}</Link>
+					<Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
 				</li>
 			))}
 		</ul>
@@ -168,7 +177,6 @@ const App = () => {
 
 	const vote = (id) => {
 		const anecdote = anecdoteById(id);
-
 		const voted = {
 			...anecdote,
 			votes: anecdote.votes + 1,
@@ -177,24 +185,19 @@ const App = () => {
 		setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
 	};
 
-	// Look for an anecdote ID in the URL and
-	// get the corresponding anecdote if it exists
-	// const match = useRouteMatch('/anecdote/:id');
-	// const anecdote = match ? anecdoteById(match.params.id) : null;
-
 	return (
 		<div style={padding}>
 			<h1>Software anecdotes</h1>
 			<Menu />
 			<Switch>
-				<Route path='/anecdote/:id'>
-					<Anecdote anecdote={anecdoteById} />
-				</Route>
 				<Route path='/about'>
 					<About />
 				</Route>
 				<Route path='/create'>
 					<CreateNew addNew={addNew} />
+				</Route>
+				<Route path='/anecdotes/:id'>
+					<Anecdote anecdotes={anecdotes} />
 				</Route>
 				<Route path='/'>
 					<AnecdoteList anecdotes={anecdotes} />
