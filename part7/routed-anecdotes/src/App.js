@@ -1,23 +1,35 @@
 import React, { useState } from 'react';
 import { Switch, Route, Link, useParams, useHistory } from 'react-router-dom';
 import { useField } from './hooks';
+import {
+	Container,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableRow,
+	Paper,
+	Button,
+	AppBar,
+	Toolbar,
+} from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 
 const Menu = () => {
-	const padding = {
-		paddingRight: 10,
-	};
 	return (
-		<div>
-			<a href='/' style={padding}>
-				anecdotes
-			</a>
-			<a href='/create' style={padding}>
-				create new
-			</a>
-			<a href='/about' style={padding}>
-				about
-			</a>
-		</div>
+		<AppBar position='static'>
+			<Toolbar>
+				<Button color='inherit' component={Link} to='/'>
+					Anecdotes
+				</Button>
+				<Button color='inherit' component={Link} to='/create'>
+					Create new
+				</Button>
+				<Button color='inherit' component={Link} to='/about'>
+					About
+				</Button>
+			</Toolbar>
+		</AppBar>
 	);
 };
 
@@ -43,13 +55,21 @@ const Anecdote = ({ anecdotes }) => {
 const AnecdoteList = ({ anecdotes }) => (
 	<div>
 		<h2>Anecdotes</h2>
-		<ul>
-			{anecdotes.map((anecdote) => (
-				<li key={anecdote.id}>
-					<Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-				</li>
-			))}
-		</ul>
+
+		<TableContainer component={Paper}>
+			<Table>
+				<TableBody>
+					{anecdotes.map((anecdote) => (
+						<TableRow key={anecdote.id}>
+							<TableCell>
+								<Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+							</TableCell>
+							<TableCell>{anecdote.author}</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
 	</div>
 );
 
@@ -149,11 +169,6 @@ const CreateNew = (props) => {
 };
 
 const App = () => {
-	const padding = {
-		paddingTop: 25,
-		marginLeft: 15,
-	};
-
 	const [anecdotes, setAnecdotes] = useState([
 		{
 			content: 'If it hurts, do it more often',
@@ -198,10 +213,12 @@ const App = () => {
 	};
 
 	return (
-		<div style={padding}>
+		<Container>
+			<div>
+				{notification && <Alert severity='success'>{notification}</Alert>}
+			</div>
 			<h1>Software anecdotes</h1>
 			<Menu />
-			<p>{notification}</p>
 			<Switch>
 				<Route path='/about'>
 					<About />
@@ -217,7 +234,7 @@ const App = () => {
 				</Route>
 			</Switch>
 			<Footer />
-		</div>
+		</Container>
 	);
 };
 
