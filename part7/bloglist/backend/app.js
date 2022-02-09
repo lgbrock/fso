@@ -9,6 +9,7 @@ const blogsRouter = require('./controllers/blogs');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 logger.info('connecting to...', config.MONGODB_URI);
 
@@ -25,6 +26,7 @@ mongoose
 app.use(cors());
 app.use(express.static('build'));
 app.use(express.json());
+app.use(helmet());
 // app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
 // app.use(middleware.userExtractor);
