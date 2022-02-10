@@ -17,48 +17,26 @@ const App = () => {
 	const [user, setUser] = useState(null);
 
 	useEffect(() => {
-		blogService.getAll().then((blogs) => setBlogs(blogs));
+		blogService
+			.getAll()
+			.then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
 	}, []);
 
 	useEffect(() => {
-		const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
+		const loggedUserJSON = window.localStorage.getItem(
+			'fsoblogapp.loggedinuser'
+		);
 		if (loggedUserJSON) {
 			const user = JSON.parse(loggedUserJSON);
-			setUser(user);
 			blogService.setToken(user.token);
-
-			getBlogs();
+			setUser(user);
 		}
 	}, []);
 
-	const handleLogout = (event) => {
-		event.preventDefault();
-		window.localStorage.removeItem('loggedBlogappUser');
+	const onLogout = () => {
+		window.localStorage.removeItem('fsoblogapp.loggedinuser');
 		setUser(null);
 	};
-
-	// BLOG FORM
-
-	const getBlogs = async () => {
-		const blogs = await blogService.getAll();
-		blogs.sort((a, b) => (a.likes > b.likes ? -1 : 1));
-		setBlogs(blogs);
-	};
-
-	// const updateBlog = async (id, blogObject) => {
-	// 	const updatedBlog = await blogService.update(id, blogObject);
-	// 	setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
-	// 	dispatch(
-	// 		createNotificationAction(
-	// 			`blog ${updatedBlog.title} by ${updatedBlog.author} updated`,
-	// 			'success'
-	// 		)
-	// 	);
-
-	// 	blogFormRef.current.toggleVisibility();
-
-	// 	getBlogs();
-	// };
 
 	const onDelete = async (blog) => {
 		if (
@@ -87,7 +65,7 @@ const App = () => {
 				<div>
 					<h1>Blog App</h1>
 					<p>
-						Welcome, {user.name}!<button onClick={handleLogout}>Logout</button>
+						Welcome, {user.name}!<button onClick={onLogout}>Logout</button>
 					</p>
 					<BlogForm
 						blogService={blogService}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import loginService from '../services/login';
 
@@ -15,29 +15,26 @@ const LoginForm = (props) => {
 
 	const onLogin = async (event) => {
 		event.preventDefault();
-		try {
-			const user = await loginService.login(username, password);
-
-			if ({}.hasOwnProperty.call(user, 'error')) {
-				dispatch(createNotificationAction('error', user.error));
-			} else {
-				setUsername('');
-				setPassword('');
-				setUser(user);
-				blogService.setToken(user.token);
-				window.localStorage.setItem(
-					'fsoblogapp.loggedinuser',
-					JSON.stringify(user)
-				);
-			}
-		} catch (error) {
-			dispatch(createNotificationAction('error', error.message));
+		const user = await loginService.login(username, password);
+		if ({}.hasOwnProperty.call(user, 'error')) {
+			dispatch(createNotificationAction('error', user.error));
 		}
+		setUsername('');
+		setPassword('');
+		setUser(user);
+
+		blogService.setToken(user.token);
+
+		window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
+
+		dispatch(createNotificationAction('success', 'Login successful'));
+
+		return user;
 	};
 
 	return (
 		<div>
-			<h2>Log in to application</h2>
+			<h1>Login to Blog App</h1>
 			<form>
 				Username:{' '}
 				<input
@@ -61,6 +58,11 @@ const LoginForm = (props) => {
 			</form>
 		</div>
 	);
+};
+
+LoginForm.propTypes = {
+	blogService: PropTypes.object.isRequired,
+	setUser: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
