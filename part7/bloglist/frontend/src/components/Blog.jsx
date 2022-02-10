@@ -1,34 +1,11 @@
 import React, { useState } from 'react';
-import blogService from '../services/blogs';
+import { useDispatch } from 'react-redux';
 
-const Blog = ({ blog }) => {
-	const [blogObject, setBlogObject] = useState(blog);
-	const [visible, setVisible] = useState(false);
-	const showWhenVisible = { display: visible ? '' : 'none' };
+import { createNotificationAction } from '../reducers/notificationReducer';
 
-	const toggleVisibility = () => {
-		setVisible(!visible);
-	};
-
-	const buttonLabel = visible ? 'hide' : 'view';
-
-	const increaseLikes = () => {
-		const updatedBlog = {
-			...blogObject,
-			likes: blogObject.likes + 1,
-		};
-		setBlogObject(updatedBlog);
-	};
-
-	const removeBlog = async () => {
-		if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-			await blogService.remove(blog.id);
-
-			let blogs = await blogService.getAll();
-			blogs.sort((a, b) => b.likes - a.likes);
-			setBlogObject(blogs);
-		}
-	};
+const Blog = (props) => {
+	const { blog, blogService, user, onDelete } = props;
+	const dispatch = useDispatch();
 
 	const blogStyle = {
 		paddingTop: 10,
@@ -38,27 +15,49 @@ const Blog = ({ blog }) => {
 		marginBottom: 5,
 	};
 
+	const [likes, setLikes] = useState(blog.likes);
+	const [visible, setVisible] = useState(false);
+
+	const onLike = async (event) => {
+		event.preventDefault();
+		try {
+			const response = await blogService.likeBlog(blog);
+			if ({}.hasOwnProperty.call(response, 'error')) {
+				dispatch(createNotificationAction('error', response.error));
+			} else {
+				setLikes(likes + 1);
+			}
+		} catch (error) {
+			dispatch(createNotificationAction('error', error.message));
+		}
+	};
+
 	return (
 		<div style={blogStyle} className='blog'>
-			<div>
-				<p>
-					{blog.title} - {blog.author}{' '}
-					<button onClick={toggleVisibility}>{buttonLabel}</button>
-				</p>
-			</div>
-			<div style={showWhenVisible}>
-				<p>{blog.url}</p>
-				<p>
-					likes {blogObject.likes}{' '}
-					<button id='like-button' onClick={increaseLikes}>
-						like
-					</button>
-				</p>
-
-				<button id='remove-blog' onClick={removeBlog}>
-					remove
-				</button>
-			</div>
+			{blog.title} - {blog.author} &nbsp;
+			{visible && (
+				<>
+					<button onClick={() => setVisible(false)}>Hide Details</button>
+					<br />
+					&nbsp;
+					<br />
+					<a href={blog.url}>{blog.url}</a>
+					<br />
+					{likes} likes <button onClick={onLike}>Like!</button>
+					<br />
+					posted by {blog.user ? blog.user.name : 'Missing User'}
+					{blog.user && user.id === blog.user.id && (
+						<>
+							&nbsp;
+							<br />
+							<button onClick={() => onDelete(blog)}>Delete</button>
+						</>
+					)}
+				</>
+			)}
+			{!visible && (
+				<button onClick={() => setVisible(true)}>View Details</button>
+			)}
 		</div>
 	);
 };

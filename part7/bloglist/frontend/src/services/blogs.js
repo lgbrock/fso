@@ -35,4 +35,13 @@ const remove = async (id) => {
 	return response.data;
 };
 
-export default { getAll, create, update, setToken, remove };
+const likeBlog = async (blog) => {
+	const response = await axios.put(
+		`${baseUrl}/${blog.id}`,
+		{ ...blog, likes: blog.likes + 1 },
+		config
+	);
+	return response.data;
+};
+
+export default { getAll, create, update, setToken, remove, likeBlog };

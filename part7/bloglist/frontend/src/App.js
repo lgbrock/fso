@@ -1,22 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+
 import Blog from './components/Blog';
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
+
 import blogService from './services/blogs';
+
 import { createNotificationAction } from './reducers/notificationReducer';
 
 const App = () => {
 	const dispatch = useDispatch();
 
 	const [blogs, setBlogs] = useState([]);
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
-
 	const [user, setUser] = useState(null);
-
-	const blogFormRef = useRef();
 
 	useEffect(() => {
 		blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -47,80 +45,70 @@ const App = () => {
 		setBlogs(blogs);
 	};
 
-	const addBlog = async (blogObject) => {
-		blogFormRef.current.toggleVisibility();
-		const createdBlog = await blogService.create(blogObject);
-		setBlogs(blogs.concat(createdBlog));
-		dispatch(
-			createNotificationAction(
-				`a new blog ${createdBlog.title} by ${createdBlog.author} added`,
-				'success'
+	// const updateBlog = async (id, blogObject) => {
+	// 	const updatedBlog = await blogService.update(id, blogObject);
+	// 	setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
+	// 	dispatch(
+	// 		createNotificationAction(
+	// 			`blog ${updatedBlog.title} by ${updatedBlog.author} updated`,
+	// 			'success'
+	// 		)
+	// 	);
+
+	// 	blogFormRef.current.toggleVisibility();
+
+	// 	getBlogs();
+	// };
+
+	const onDelete = async (blog) => {
+		if (
+			window.confirm(
+				`Are you sure you want to remove the blog "${blog.title}"?`
 			)
-		);
-	};
-
-	const updateBlog = async (id, blogObject) => {
-		const updatedBlog = await blogService.update(id, blogObject);
-		setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
-		dispatch(
-			createNotificationAction(
-				`blog ${updatedBlog.title} by ${updatedBlog.author} updated`,
-				'success'
-			)
-		);
-
-		blogFormRef.current.toggleVisibility();
-
-		getBlogs();
-	};
-
-	const deleteBlog = async (id) => {
-		const deletedBlog = await blogService.deleteBlog(id);
-		setBlogs(blogs.filter((blog) => blog.id !== id));
-		dispatch(
-			createNotificationAction(
-				`blog ${deletedBlog.title} by ${deletedBlog.author} deleted`,
-				'success'
-			)
-		);
-
-		blogFormRef.current.toggleVisibility();
-
-		getBlogs();
+		) {
+			try {
+				const response = await blogService.deleteBlog(blog.id);
+				if ({}.hasOwnProperty.call(response, 'error')) {
+					dispatch(createNotificationAction('error', response.error));
+				} else {
+					setBlogs(blogs.filter((b) => b.id !== blog.id));
+				}
+			} catch (error) {
+				dispatch(createNotificationAction('error', error.message));
+			}
+		}
 	};
 
 	return (
-		<div>
-			<h1>Blog app</h1>
+		<>
 			<Notification />
-			{user === null ? (
-				<LoginForm
-					username={username}
-					password={password}
-					setUsername={setUsername}
-					setPassword={setPassword}
-					setUser={setUser}
-				/>
-			) : (
+			{!user && <LoginForm blogService={blogService} setUser={setUser} />}
+			{user && (
 				<div>
+					<h1>Blog App</h1>
 					<p>
-						{user.name} logged in
-						<button onClick={handleLogout}>logout</button>
+						Welcome, {user.name}!<button onClick={handleLogout}>Logout</button>
 					</p>
-					<BlogForm blogs={blogs} addBlog={addBlog} blogFormRef={blogFormRef} />
+					<BlogForm
+						blogService={blogService}
+						blogs={blogs}
+						setBlogs={setBlogs}
+					/>
 					<h2>Blogs</h2>
-					{blogs.map((blog) => (
-						<Blog
-							key={blog.id}
-							blog={blog}
-							updateBlog={updateBlog}
-							deleteBlog={deleteBlog}
-							user={user}
-						/>
-					))}
+					<div id='bloglist'>
+						{blogs.map((blog) => (
+							<Blog
+								key={blog.id}
+								blog={blog}
+								blogService={blogService}
+								user={user}
+								onDelete={onDelete}
+							/>
+						))}
+					</div>
 				</div>
 			)}
-		</div>
+		</>
 	);
 };
 
