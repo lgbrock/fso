@@ -29,10 +29,6 @@ let authors = [
 ];
 
 /*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- *
  * English:
  * It might make more sense to associate a book with its author by storing the author's id in the context of the book instead of the author's name
  * However, for simplicity, we will store the author's name in connection with the book
@@ -110,8 +106,7 @@ const typeDefs = gql`
 		bookCount: Int!
 		authorCount: Int!
 
-		allBooks(author: String): [Book!]!
-		allBooks(genre: String): [Book!]!
+		allBooks(author: String, genre: String): [Book!]!
 		allAuthors: [Author!]!
 	}
 `;
@@ -120,20 +115,15 @@ const resolvers = {
 	Query: {
 		authorCount: () => authors.length,
 		allBooks: (root, args) => {
-			if (!args.author) {
-				return books;
-			} else {
-				return books.filter((book) => book.author === args.author);
+			if (args.author && args.genre) {
+				return _.filter(books, { author: args.author, genres: [args.genre] });
 			}
-		},
-		allAuthors: () => {
-			const bookCount = _.countBy(books, 'author');
-			return authors.map((author) => {
-				return {
-					...author,
-					bookCount: bookCount[author.name],
-				};
-			});
+			if (args.author) {
+				return _.filter(books, { author: args.author });
+			}
+			if (args.genre) {
+				return _.filter(books, { genres: [args.genre] });
+			}
 		},
 		bookCount: () => books.length,
 	},
