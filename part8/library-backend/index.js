@@ -1,6 +1,7 @@
+// Quick update
 const { ApolloServer, gql } = require('apollo-server');
 const _ = require('lodash');
-// const uuid = require('uuid/v1');
+const { v1: uuid } = require('uuid');
 
 let authors = [
 	{
@@ -109,23 +110,50 @@ const typeDefs = gql`
 		allBooks(author: String, genre: String): [Book!]!
 		allAuthors: [Author!]!
 	}
+
+	type Mutation {
+		addBook(
+			title: String!
+			published: Int!
+			author: String!
+			genres: [String!]!
+		): Book!
+	}
 `;
 
 const resolvers = {
 	Query: {
 		authorCount: () => authors.length,
 		allBooks: (root, args) => {
-			if (args.author && args.genre) {
-				return _.filter(books, { author: args.author, genres: [args.genre] });
-			}
-			if (args.author) {
-				return _.filter(books, { author: args.author });
-			}
-			if (args.genre) {
-				return _.filter(books, { genres: [args.genre] });
+			if (!args.author && !args.genre) {
+				return books;
+			} else if (args.author) {
+				return books.filter((book) => book.author === args.author);
+			} else if (args.genre) {
+				return books.filter((book) => book.genres.includes(args.genre));
 			}
 		},
 		bookCount: () => books.length,
+	},
+	Mutation: {
+		addBook: (root, args) => {
+			const newBook = { ...args, id: uuid() };
+			books = books.concat(newBook);
+
+			const authorExists = authors.find(
+				(author) => author.name === args.author
+			);
+			if (!authorExists) {
+				const newAuthor = {
+					name: args.author,
+					born: null,
+					id: uuid(),
+				};
+				authors = authors.concat(newAuthor);
+			}
+
+			return newBook;
+		},
 	},
 };
 
