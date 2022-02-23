@@ -9,6 +9,7 @@
   "author": "Logan Brock",
   "license": "MIT",
   "dependencies": {
+    "@apollo/client": "^3.5.9",
     "apollo-server": "^3.6.3",
     "apollo-server-core": "^3.6.3",
     "graphql": "^16.3.0",

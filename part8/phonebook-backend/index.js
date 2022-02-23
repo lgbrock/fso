@@ -1,6 +1,6 @@
 const { ApolloServer, UserInputError, gql } = require('apollo-server');
 
-const uuid = require('uuid/v1');
+const { v4: uuidv4 } = require('uuid');
 
 let persons = [
 	{
@@ -86,7 +86,7 @@ const resolvers = {
 					invalidArgs: args.name,
 				});
 			}
-			const person = { ...args, id: uuid() };
+			const person =
 			persons = persons.concat(person);
 			return person;
 		},

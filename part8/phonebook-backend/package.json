@@ -1,0 +1,55 @@
+{
+	"name": "apollo",
+	"version": "0.0.1",
+	"description": "GraphQL - server",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Logan Brock",
+	"license": "MIT",
+	"dependencies": {
+		"@apollo/client": "^3.5.9",
+		"apollo-server": "^3.6.3",
+		"apollo-server-core": "^3.6.3",
+		"graphql": "^16.3.0",
+		"uuid": "^8.3.2"
+	},
+	"breadcrumbs.enabled": false,
+	"fisles.trimTrailingWhitespace": true,
+	"explorer.confirmDelete": false,
+	"workbench.colorTheme": "Night Owl",
+	"workbench.sideBar.location": "right",
+	"workbench.startupEditor": "none",
+	"workbench.statusBar.visible": true,
+	"workbench.activityBar.visible": false,
+	"workbench.editor.restoreViewState": true,
+	"terminal.integrated.fontFamily": "Hack Nerd Font Mono",
+	"editor.fontFamily": "Hack Nerd Font Mono",
+	"editor.fontSize": 14,
+	"editor.tabSize": 2,
+	"editor.insertSpaces": true,
+	"editor.detectIndentation": false,
+	"editor.renderWhitespace": "none",
+	"editor.scrollBeyondLastLine": true,
+	"editor.minimap.enabled": false,
+	"editor.formatOnSave": true,
+	"files.associations": {
+		".env*": "makefile"
+	},
+	"prettier.singleQuote": true,
+	"prettier.printWidth": 70,
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"eslint.validate": [
+		"javascript"
+	],
+	"javascript.updateImportsOnFileMove.enabled": "never"
+}
