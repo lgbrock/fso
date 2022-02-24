@@ -1,6 +1,5 @@
 const { ApolloServer, UserInputError, gql } = require('apollo-server');
-
-const { v4: uuidv4 } = require('uuid');
+const { v1: uuid } = require('uuid');
 
 let persons = [
 	{
@@ -26,15 +25,15 @@ let persons = [
 ];
 
 const typeDefs = gql`
+	type Address {
+		street: String!
+		city: String!
+	}
 	type Person {
 		name: String!
 		phone: String
 		address: Address!
 		id: ID!
-	}
-	type Address {
-		street: String!
-		city: String!
 	}
 	enum YesNo {
 		YES
@@ -63,19 +62,17 @@ const resolvers = {
 			if (!args.phone) {
 				return persons;
 			}
-
 			const byPhone = (person) =>
 				args.phone === 'YES' ? person.phone : !person.phone;
-
 			return persons.filter(byPhone);
 		},
 		findPerson: (root, args) => persons.find((p) => p.name === args.name),
 	},
 	Person: {
-		address: (root) => {
+		address: ({ street, city }) => {
 			return {
-				street: root.street,
-				city: root.city,
+				street,
+				city,
 			};
 		},
 	},
@@ -86,7 +83,8 @@ const resolvers = {
 					invalidArgs: args.name,
 				});
 			}
-			const person =
+
+			const person = { ...args, id: uuid() };
 			persons = persons.concat(person);
 			return person;
 		},

@@ -10,6 +10,20 @@ export const ALL_PERSONS = gql`
 	}
 `;
 
+export const FIND_PERSON = gql`
+	query findPersonByName($nameToSearch: String!) {
+		findPerson(name: $nameToSearch) {
+			name
+			phone
+			id
+			address {
+				street
+				city
+			}
+		}
+	}
+`;
+
 export const CREATE_PERSON = gql`
 	mutation createPerson(
 		$name: String!
@@ -29,16 +43,16 @@ export const CREATE_PERSON = gql`
 	}
 `;
 
-export const FIND_PERSON = gql`
-	query findPersonByName($nameToSearch: String!) {
-		findPerson(name: $nameToSearch) {
+export const EDIT_NUMBER = gql`
+	mutation editNumber($name: String!, $phone: String!) {
+		editNumber(name: $name, phone: $phone) {
 			name
 			phone
-			id
 			address {
 				street
 				city
 			}
+			id
 		}
 	}
 `;
