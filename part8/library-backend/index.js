@@ -91,7 +91,7 @@ const typeDefs = gql`
 		name: String
 		id: ID!
 		born: Int
-		bookCount: Int!
+		bookCount: Int
 	}
 
 	type Book {
@@ -132,6 +132,13 @@ const resolvers = {
 			} else if (args.genre) {
 				return books.filter((book) => book.genres.includes(args.genre));
 			}
+		},
+		allAuthors: () => {
+			const bookCounts = _.countBy(books, (book) => book.author);
+			return authors.map((author) => ({
+				...author,
+				bookCount: bookCounts[author.name],
+			}));
 		},
 		bookCount: () => books.length,
 	},
