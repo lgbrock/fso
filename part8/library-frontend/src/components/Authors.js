@@ -5,16 +5,17 @@ import { ALL_AUTHORS } from '../queries';
 
 const Authors = (props) => {
 	const result = useQuery(ALL_AUTHORS);
+	const authors = result.data.allAuthors;
+
+	if (result.loading) {
+		return <div>Loading...</div>;
+
+	}
+
 	if (!props.show) {
 		return null;
 	}
-
-	if (result.loading) {
-		<div>Loading...</div>;
-	}
-
-	const authors = result.data.allAuthors; // result.data.allAuthors is an array of objects
-
+	
 	return (
 		<div>
 			<h2>authors</h2>
@@ -34,6 +35,7 @@ const Authors = (props) => {
 					</tr>
 					{authors.map((a) => (
 						<tr key={a.name}>
+							<td>{a.id}</td>
 							<td>{a.name}</td>
 							<td>{a.born}</td>
 							<td>{a.bookCount}</td>
