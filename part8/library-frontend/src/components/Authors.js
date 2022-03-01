@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries';
@@ -14,8 +14,6 @@ const Authors = (props) => {
 	const authors = result.data.allAuthors;
 
 	const submit = async (event) => {
-		event.preventDefault();
-
 		const name = event.target.name.value;
 		const setBornTo = parseInt(event.target.born.value);
 
