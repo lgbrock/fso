@@ -7,8 +7,7 @@ const JWT_SECRET = 'secret';
 
 let person = [];
 
-const MONGODB_URI =
-	'mongodb+srv://lgbrock:turkeydog@cluster0.6rd1h.mongodb.net/phonebook?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/phonebook';
 
 console.log('connecting to', MONGODB_URI, {
 	useNewUrlParser: true,
