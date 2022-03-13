@@ -13,6 +13,7 @@ The course covers testing, configuration and environment management, and the use
 ## Documentation
 
 [Courses](https://fullstackopen.com/en/#course-contents)
+
 ## Tech Stack
 
 **Client:** React, Redux, GraphQL, TypeScript
@@ -22,3 +23,5 @@ The course covers testing, configuration and environment management, and the use
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Table of Contents
