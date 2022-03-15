@@ -20,6 +20,8 @@ The course covers testing, configuration and environment management, and the use
 
 **Server:** Node, Express, MongoDB
 
+**Testing:** Jest, Cypress
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
