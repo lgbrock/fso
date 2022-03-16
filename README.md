@@ -29,7 +29,21 @@ The course covers testing, configuration and environment management, and the use
 ## Table of Contents
 
 Section 1
+
 Section 2
+
 Section 3
+
 Section 4
+
 Section 5
+
+Section 6
+
+Section 7
+
+Section 8
+
+Section 9
+
+Section 10
