@@ -2,7 +2,7 @@
 
 # Full Stack Open 2021
 
-This course serves as an introduction to modern web application development with JavaScript. The main focus is on building single page applications with ReactJS that use REST APIs built with Node.js. The course also contains a section on GraphQL, a modern alternative to REST APIs.
+This course serves as an introduction to modern web application development with JavaScript. The main focus is on building single page applications with ReactJS that use REST APIs built with Node.js. The course also contains a Part on GraphQL, a modern alternative to REST APIs.
 
 The course covers testing, configuration and environment management, and the use of MongoDB for storing the application’s data.
 
@@ -28,28 +28,31 @@ The course covers testing, configuration and environment management, and the use
 
 ## Table of Contents
 
-Section 1
+Part 0
+👉 https://fullstackopen.com/en/part0
 
-Section 2
+Part 1
 
-Section 3
+Part 2
 
-Section 4
+Part 3
 
-Section 5
+Part 4
 
-Section 6
+Part 5
 
-Section 7
+Part 6
 
-Section 8
+Part 7
 
-Section 9
+Part 8
 
-Section 10
+Part 9
 
-Section 11
+Part 10
 
-Section 12
+Part 11
 
-Section 13
+Part 12
+
+Part 13
