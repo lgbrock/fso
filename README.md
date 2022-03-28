@@ -47,10 +47,10 @@ Part 5
 👉 https://fullstackopen.com/en/part5
 
 Part 6
-👉
+👉 https://fullstackopen.com/en/part6
 
 Part 7
-👉
+👉 https://fullstackopen.com/en/part7
 
 Part 8
 👉
