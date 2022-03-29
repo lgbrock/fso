@@ -53,19 +53,19 @@ Part 7
 👉 https://fullstackopen.com/en/part7
 
 Part 8
-👉
+👉 https://fullstackopen.com/en/part8
 
 Part 9
-👉
+👉 https://fullstackopen.com/en/part9
 
 Part 10
-👉
+👉 https://fullstackopen.com/en/part10
 
 Part 11
-👉
+👉 https://fullstackopen.com/en/part11
 
 Part 12
-👉
+👉 https://fullstackopen.com/en/part12
 
 Part 13
-👉
+👉 https://fullstackopen.com/en/part13
